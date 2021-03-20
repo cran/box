@@ -4,7 +4,7 @@
 \alias{set_script_path}
 \title{Set the base path of the script}
 \usage{
-set_script_path(path)
+set_script_path(path = NULL)
 }
 \arguments{
 \item{path}{character string containing the relative or absolute path to the

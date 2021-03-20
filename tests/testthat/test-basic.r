@@ -98,3 +98,19 @@ test_that('package exports do not leak into modules', {
     expect_identical(get0('T', envir = ns_a), TRUE)
     expect_identical(get0('t.test', envir = ns_a), NULL)
 })
+
+test_that('partial name causes error', {
+    box::use(mod/a)
+    expect_error(a$double, NA)
+    expect_error(a$doubl, "name 'doubl' not found in 'a'")
+
+    # Check whether error call is correct:
+    error = tryCatch(a$doubl, error = identity)
+    expect_s3_class(error, 'simpleError')
+    expect_identical(error$call, quote(a$doubl))
+})
+
+test_that('trailing comma is accepted', {
+    expect_error(box::use(mod/a, ), NA)
+    expect_error(box::use(mod/a, mod/b, ), NA)
+})

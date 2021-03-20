@@ -1,3 +1,8 @@
+#' Biological sequences
+#'
+#' The \code{bio/seq} module provides a type for representing DNA sequences.
+'.__module__.'
+
 #' Test whether input is valid biological sequence
 #' @param seq a character vector or \code{seq} object
 #' @name seq
@@ -68,5 +73,9 @@ revcomp = function (seq) {
 table = function (seq) {
     box::use(stats[set_names = setNames])
     nucleotides = lapply(strsplit(seq, ''), factor, c('A', 'C', 'G', 'T'))
-    set_names(lapply(nucleotides, base::table), names(seq))
+    set_names(lapply(nucleotides, base::table, dnn = NULL), names(seq))
+}
+
+if (is.null(box::name())) {
+    box::use(./`__tests__`)
 }

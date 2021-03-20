@@ -123,7 +123,7 @@ getS3method('print', 'bio/seq')
     ##     )
     ##     invisible(x)
     ## }
-    ## <environment: 0x7fd7050192d8>
+    ## <environment: 0x7fb4802a4600>
 
 The source code for `print.bio/seq` contains an interesting `use`
 declaration. It show-cases an alternative way of invoking `box::use`,
@@ -220,12 +220,10 @@ seq_table(s)
 ```
 
     ## $gene1
-    ## 
     ##  A  C  G  T 
     ## 13 12  6  7 
     ## 
     ## $gene2
-    ## 
     ## A C G T 
     ## 8 7 4 3
 

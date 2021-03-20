@@ -12,7 +12,7 @@
 
 <meta name="author" content="Konrad Rudolph" />
 
-<meta name="date" content="2021-02-08" />
+<meta name="date" content="2021-03-20" />
 
 <title>Get started</title>
 
@@ -124,7 +124,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Get started</h1>
 <h4 class="author">Konrad Rudolph</h4>
-<h4 class="date">2021-02-08</h4>
+<h4 class="date">2021-03-20</h4>
 
 
 <div id="TOC">
@@ -186,7 +186,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##     )
 ##     invisible(x)
 ## }
-## &lt;environment: 0x7fd7050192d8&gt;</code></pre>
+## &lt;environment: 0x7fb4802a4600&gt;</code></pre>
 <p>The source code for <code>print.bio/seq</code> contains an interesting <code>use</code> declaration. It show-cases an alternative way of invoking <code>box::use</code>, which we’ll explore now.</p>
 </div>
 <div id="attaching-modules" class="section level2">
@@ -226,12 +226,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">seq_table</span>(s)</span></code></pre></div>
 <pre><code>## $gene1
-## 
 ##  A  C  G  T 
 ## 13 12  6  7 
 ## 
 ## $gene2
-## 
 ## A C G T 
 ## 8 7 4 3</code></pre>
 <p>Unlike above, we are now attaching <em>all</em> exported names instead of specifying individual names. The subsequent line of code uses the <code>seq$table</code> function rather than <code>base::table</code> (which would have a different output). And note that the <code>seq</code> module’s <code>table</code> function is <em>not</em> attached outside the local scope:</p>

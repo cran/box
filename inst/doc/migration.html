@@ -12,7 +12,7 @@
 
 <meta name="author" content="Konrad Rudolph" />
 
-<meta name="date" content="2021-02-08" />
+<meta name="date" content="2021-03-20" />
 
 <title>Migration guide</title>
 
@@ -124,7 +124,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Migration guide</h1>
 <h4 class="author">Konrad Rudolph</h4>
-<h4 class="date">2021-02-08</h4>
+<h4 class="date">2021-03-20</h4>
 
 
 <div id="TOC">
@@ -140,6 +140,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#changed-options">Changed options</a></li>
 <li><a href="#changed-function-names">Changed function names</a></li>
 <li><a href="#exporting-names-from-modules">Exporting names from modules</a></li>
+<li><a href="#accessing-default-packages">Accessing default packages</a></li>
 <li><a href="#loading-parents-of-nested-modules">Loading parents of nested modules</a></li>
 <li><a href="#displaying-documentation">Displaying documentation</a></li>
 <li><a href="#cyclic-imports">Cyclic imports</a></li>
@@ -250,6 +251,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    prefix<span class="sc">/</span>mod2[a, b, c]</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>The above code will export the names <code>pkg_alias</code>, <code>mod</code>, <code>a</code>, <code>b</code> and <code>c</code>.</p>
+</div>
+<div id="accessing-default-packages" class="section level2">
+<h2>Accessing default packages</h2>
+<p>In ‘modules’, module source code “sees” the package search path at the time it is loaded. That is, modules have implicit access to all names in packages that were attached when the module was loaded. In particular, this means that legacy modules could access names in the default packages (in non-interactive sessions, that’s typically ‘datasets’, ‘utils’, ‘grDevices’, ‘graphics’ and ‘stats’; in interactive sessions, the package ‘methods’ is added).</p>
+<p>‘box’ modules no longer attach <em>any</em> packages by default, except ‘base’. If a module needs to use functions from those other packages, it needs to declare them explicitly (e.g. via <code>box::use(stats)</code>).</p>
 </div>
 <div id="loading-parents-of-nested-modules" class="section level2">
 <h2>Loading parents of nested modules</h2>

@@ -6,6 +6,7 @@
 \alias{script_path}
 \alias{knitr_path}
 \alias{shiny_path}
+\alias{testthat_path}
 \title{Get a module’s path}
 \usage{
 path(mod)
@@ -17,6 +18,8 @@ script_path()
 knitr_path()
 
 shiny_path()
+
+testthat_path()
 }
 \arguments{
 \item{mod}{a module environment or namespace.}
@@ -32,10 +35,16 @@ base directory, or the current working directory if not invoked on a module.
 directory in which the calling R code is run. See \sQuote{Details}.
 
 \code{knitr_path} returns the directory in which the currently knit
-document is run, or \code{NULL} if not called from within a knitr document.
+document is run, or \code{NULL} if not called from within a \pkg{knitr}
+document.
 
-\code{shiny_path} returns the directory in which a Shiny application
-is running, or \code{NULL} if not called from within a Shiny application.
+\code{shiny_path} returns the directory in which a \pkg{Shiny}
+application is running, or \code{NULL} if not called from within a
+\pkg{Shiny} application.
+
+\code{testthat_path} returns the directory in which \pkg{testthat}
+code is being executed, or \code{NULL} if not called from within a
+\pkg{testthat} test case.
 }
 \description{
 The following functions retrieve information about the path of the directory
@@ -49,6 +58,8 @@ code. The following calling situations are covered:
 \enumerate{
  \item Path explicitly set via \code{set_script_path}
  \item Path of a running document/application (\pkg{knitr}, \pkg{Shiny})
+ \item Path of unit test cases (\pkg{testthat})
+ \item Path of the currently opened source code file in RStudio
  \item Code invoked as \command{Rscript script.r}
  \item Code invoked as \command{R CMD BATCH script.r}
  \item Script run interactively (use \code{getwd()})
