@@ -38,7 +38,7 @@ mod_exports(info, spec, mod_ns)
 
 mod_export_names(info, mod_ns)
 
-attach_to_caller(spec, mod_exports, caller)
+attach_to_caller(spec, info, mod_exports, mod_ns, caller)
 
 attach_list(spec, exports)
 

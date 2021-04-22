@@ -12,6 +12,19 @@ vignette: >
     %\VignetteIndexEntry{Migration guide}
     %\VignetteEncoding{UTF-8}
 ---
+---
+author: Konrad Rudolph
+date: 2021-04-22
+output:
+  md_document:
+    variant: gfm
+  rmarkdown::html_vignette:
+    toc: true
+title: Migration guide
+vignette: |
+  % % %
+---
+
 ## ‘modules’ “v1.0” == ‘box’
 
 ‘box’ is the spiritual successor of the [‘modules’
@@ -42,7 +55,7 @@ pkgname = import_package('pkgname')
 ```
 
 With ‘box’, modules and packages are imported via
-[`box::use()`](https://klmr.me/box/reference/use.html):
+[`box::use`](https://klmr.me/box/reference/use.html):
 
 ```{r eval = FALSE}
 box::use(prefix/modname)
@@ -51,7 +64,7 @@ box::use(pkgname)
 
 Notably, module and package names in a use declaration in ‘box’ are
 unquoted, unevaluated expressions; and **the ‘box’ package is never
-loaded via `library()`**. In fact, `library(box)` raises an error.
+loaded via `library`**. In fact, `library(box)` raises an error.
 
 Furthermore, with ‘box’, module names *must* be fully qualified. The
 equivalent of the ‘modules’ code `mod = import('modname')` no longer
@@ -61,7 +74,7 @@ exists. To import a *local* module without namespace prefix, instead use
 box::use(./modname)
 ```
 
-`box::use()` has no return value. Instead, it automatically creates an
+`box::use` has no return value. Instead, it automatically creates an
 alias with the module/package name in the calling scope *if no names are
 attached* (see below). To override the alias name, specify it as as a
 named argument:
@@ -70,7 +83,7 @@ named argument:
 box::use(mod_alias = prefix/modname)
 ```
 
-Unlike with `modules::import()`, `box::use()` allows (and encourages)
+Unlike with `modules::import`, `box::use` allows (and encourages)
 multiple use declarations at once:
 
 ```{r eval = FALSE}
@@ -132,9 +145,9 @@ require operators, they need to explicitly attach them when using ‘box’.
 
 ### Loading documentation
 
-The `doc` option from `modules::import()` has been dropped without
+The `doc` option from `modules::import` has been dropped without
 replacement. ‘box’ loads documentation lazily only when it is requested
-via `box::help()` (see below).
+via `box::help` (see below).
 
 ## Executing code during module loading
 
@@ -147,8 +160,8 @@ longer guaranteed to execute.
 
 Instead, ‘box’ introduces [module event
 hooks](https://klmr.me/box/reference/mod-hooks.html), in particular
-`.on_load()`, which is a function that gets executed whenever a module
-is first loaded inside an R session.
+`.on_load`, which is a function that gets executed whenever a module is
+first loaded inside an R session.
 
 ## Changed options
 
@@ -163,13 +176,13 @@ encourages consciously choosing which names to attach.
 ## Changed function names
 
 The ‘modules’ function `module_file` is now called
-[`box::file()`](https://klmr.me/box/reference/file.html). Its semantics
+[`box::file`](https://klmr.me/box/reference/file.html). Its semantics
 have also changed: it no longer cares whether files relative to the
 module exist or not; it merely constructs appropriate path strings.
 
 The ‘module’ function `module_name` is now called
-[`box::name()`](https://klmr.me/box/reference/name.html). It no longer
-has any arguments.
+[`box::name`](https://klmr.me/box/reference/name.html). It no longer has
+any arguments.
 
 ## Exporting names from modules
 
@@ -196,7 +209,7 @@ f2 = function () {}
 box::use(./nested2)
 ```
 
-`@export` directives that decorate `box::use()` declarations apply to
+`@export` directives that decorate `box::use` declarations apply to
 *all* names declared in it:
 
 ```{r eval = FALSE}
@@ -252,7 +265,7 @@ displaying module documentation. Since ‘box’ is no longer attached,
 these functions no longer display module documentation. Instead, the
 documentation of anything imported via ‘box’ (both modules and
 packages!) can be queried via
-[`box::help()`](https://klmr.me/box/reference/help.html).
+[`box::help`](https://klmr.me/box/reference/help.html).
 
 Unlike ‘modules’, ‘box’ also supports displaying the documentation of
 nested module names, e.g. `box::help(a$b$c)`.

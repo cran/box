@@ -12,6 +12,19 @@ vignette: >
     %\VignetteIndexEntry{Using compiled code}
     %\VignetteEncoding{UTF-8}
 ---
+---
+author: Konrad Rudolph
+date: 2021-04-22
+output:
+  md_document:
+    variant: gfm
+  rmarkdown::html_vignette:
+    toc: true
+title: Using compiled code
+vignette: |
+  % % %
+---
+
 ## Current status
 
 The ‘box’ package doesn’t have a built-in foreign function interface yet

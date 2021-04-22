@@ -130,9 +130,8 @@ spec_name = function (spec) {
 parse_spec_impl = function (expr) {
     if (is.name(expr)) {
         if (identical(expr, quote(.))) {
-            parse_error('Incomplete module name: ', dQuote('.'))
+            list(prefix = '.', name = '__init__')
         } else if (identical(expr, quote(..))) {
-            # parse_mod(quote(../.))
             list(prefix = '..', name = '.')
         } else {
             c(parse_pkg_name(expr), list(attach = NULL))
@@ -141,7 +140,7 @@ parse_spec_impl = function (expr) {
         if (identical(expr[[1L]], quote(`[`))) {
             if (is.name((name = expr[[2L]]))) {
                 if (identical(name, quote(.))) {
-                    parse_error('Incomplete module name: ', dQuote('.'))
+                    c(list(prefix = '.', name = '__init__'), parse_attach_spec(expr))
                 } else if (identical(name, quote(..))) {
                     # parse_mod(bquote(../.(`[[<-`(expr, 2L, quote(.)))))
                     c(list(prefix = '..', name = '.'), parse_attach_spec(expr))
@@ -251,17 +250,17 @@ parse_attach_list = function (expr) {
     if (length(expr) == 1L && identical(expr[[1L]], quote(expr =))) {
         parse_error('Expected at least one identifier in attach list')
     } else {
-        vapply(expr, parse_identifier, character(1L))
+        # We filter missing names to allow “trailing comma” syntax:
+        #   box::use(./a[x, y, ])
+        Filter(Negate(is.na), vapply(expr, parse_identifier, character(1L)))
     }
 }
 
 parse_identifier = function (expr) {
     if (length(expr) != 1L || ! is.name(expr)) {
         parse_error('Expected identifier, got ', expr)
-    } else if (identical(expr, quote(expr =))) {
-        parse_error('Expected identifier, got nothing')
     } else {
-        deparse(expr)
+        deparse(expr) %||% NA_character_
     }
 }
 

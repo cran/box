@@ -7,8 +7,9 @@
 help(topic, help_type = getOption("help_type", "text"))
 }
 \arguments{
-\item{topic}{fully-qualified name of the object or function to get help for,
-in the format \code{module$function}.}
+\item{topic}{either the fully-qualified name of the object or function to get
+help for, in the format \code{module$function}; or a name that was exported
+and attached from an imported module or package.}
 
 \item{help_type}{character string specifying the output format; currently,
 only \code{'text'} is supported.}
