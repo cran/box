@@ -24,9 +24,9 @@ test_that('modules without attaching can be parsed', {
 })
 
 test_that('parse errors are correctly handled', {
-    expect_error(
+    expect_box_error(
         test_use(foo/bar[]),
-        '^Expected at least one identifier in attach list'
+        '^expected at least one name in attach list'
     )
 })
 
@@ -79,29 +79,29 @@ test_that('imports can be relative', {
 })
 
 test_that('`./` can only be used as a prefix', {
-    expect_error(test_use(a/./b), 'can only be used as a prefix')
-    expect_error(test_use(././b), 'can only be used as a prefix')
-    expect_error(test_use(a/b/.), 'can only be used as a prefix')
-    expect_error(test_use(a/./b[foo]), 'can only be used as a prefix')
-    expect_error(test_use(././b[foo]), 'can only be used as a prefix')
-    expect_error(test_use(a/b/.[foo]), 'can only be used as a prefix')
+    expect_box_error(test_use(a/./b), 'can only be used as a prefix')
+    expect_box_error(test_use(././b), 'can only be used as a prefix')
+    expect_box_error(test_use(a/b/.), 'can only be used as a prefix')
+    expect_box_error(test_use(a/./b[foo]), 'can only be used as a prefix')
+    expect_box_error(test_use(././b[foo]), 'can only be used as a prefix')
+    expect_box_error(test_use(a/b/.[foo]), 'can only be used as a prefix')
 
     expect_error(test_use(../../b), NA)
-    expect_error(test_use(.././b), 'can only be used as a prefix')
-    expect_error(test_use(../.), 'can only be used as a prefix')
+    expect_box_error(test_use(.././b), 'can only be used as a prefix')
+    expect_box_error(test_use(../.), 'can only be used as a prefix')
     expect_error(test_use(../../b[foo]), NA)
-    expect_error(test_use(.././b[foo]), 'can only be used as a prefix')
-    expect_error(test_use(../.[foo]), 'can only be used as a prefix')
+    expect_box_error(test_use(.././b[foo]), 'can only be used as a prefix')
+    expect_box_error(test_use(../.[foo]), 'can only be used as a prefix')
 
-    expect_error(test_use(a/../b), 'can only be used as a prefix')
-    expect_error(test_use(a/b/..), 'can only be used as a prefix')
-    expect_error(test_use(a/../b[foo]), 'can only be used as a prefix')
-    expect_error(test_use(a/b/..[foo]), 'can only be used as a prefix')
+    expect_box_error(test_use(a/../b), 'can only be used as a prefix')
+    expect_box_error(test_use(a/b/..), 'can only be used as a prefix')
+    expect_box_error(test_use(a/../b[foo]), 'can only be used as a prefix')
+    expect_box_error(test_use(a/b/..[foo]), 'can only be used as a prefix')
 
-    expect_error(test_use(./../b), 'can only be used as a prefix')
-    expect_error(test_use(./..), 'can only be used as a prefix')
-    expect_error(test_use(./../b[foo]), 'can only be used as a prefix')
-    expect_error(test_use(./..[foo]), 'can only be used as a prefix')
+    expect_box_error(test_use(./../b), 'can only be used as a prefix')
+    expect_box_error(test_use(./..), 'can only be used as a prefix')
+    expect_box_error(test_use(./../b[foo]), 'can only be used as a prefix')
+    expect_box_error(test_use(./..[foo]), 'can only be used as a prefix')
 })
 
 test_that('modules can have explicit aliases', {
@@ -155,9 +155,9 @@ test_that('attached names can have aliases', {
 })
 
 test_that('exports and aliases can’t be duplicated', {
-    expect_error(test_use(foo/bar[a, b, a]), 'duplicate names')
-    expect_error(test_use(foo/bar[x = a, y = b, x = c]), 'duplicate names')
-    expect_error(test_use(foo/bar[..., ...]), 'duplicate names')
+    expect_box_error(test_use(foo/bar[a, b, a]), 'duplicate names')
+    expect_box_error(test_use(foo/bar[x = a, y = b, x = c]), 'duplicate names')
+    expect_box_error(test_use(foo/bar[..., ...]), 'duplicate names')
 
     m = test_use(foo/bar[x = a, a = b, b])
     expect_true(is_mod_spec(m))
@@ -175,8 +175,8 @@ test_that('wildcards can be mixed with aliases', {
 })
 
 test_that('wildcard can’t have alias', {
-    expect_error(test_use(foo/bar[x = ...]), 'cannot be aliased')
-    expect_error(test_use(foo/bar[x = a, y = ...]), 'cannot be aliased')
+    expect_box_error(test_use(foo/bar[x = ...]), 'cannot be aliased')
+    expect_box_error(test_use(foo/bar[x = a, y = ...]), 'cannot be aliased')
 })
 
 # … the same for packages.
@@ -236,9 +236,9 @@ test_that('attached names in packages can have aliases', {
 })
 
 test_that('exports and aliases can’t be duplicated', {
-    expect_error(test_use(foo[a, b, a]), 'duplicate names')
-    expect_error(test_use(foo[x = a, y = b, x = c]), 'duplicate names')
-    expect_error(test_use(foo[..., ...]), 'duplicate names')
+    expect_box_error(test_use(foo[a, b, a]), 'duplicate names')
+    expect_box_error(test_use(foo[x = a, y = b, x = c]), 'duplicate names')
+    expect_box_error(test_use(foo[..., ...]), 'duplicate names')
 
     m = test_use(foo[x = a, a = b, b])
     expect_true(is_pkg_spec(m))
@@ -255,6 +255,19 @@ test_that('wildcards can be mixed with aliases', {
 })
 
 test_that('wildcard can’t have alias', {
-    expect_error(test_use(foo[x = ...]), 'cannot be aliased')
-    expect_error(test_use(foo[x = a, y = ...]), 'cannot be aliased')
+    expect_box_error(test_use(foo[x = ...]), 'cannot be aliased')
+    expect_box_error(test_use(foo[x = a, y = ...]), 'cannot be aliased')
+})
+
+test_that('trailing comma is accepted', {
+    expect_error(test_use(mod/a, ), NA)
+    expect_error(test_use(mod/a, mod/b, ), NA)
+    expect_error(test_use(mod/a[modname, double, ]), NA)
+})
+
+test_that('aliases need a name', {
+    expect_box_error(test_use(alias =), 'alias without name provided in use declaration')
+    expect_box_error(box::use(mod/a, alias =), 'alias without name provided in use declaration')
+    expect_box_error(test_use(foo/bar[alias = , y]), 'alias without name provided in attach list')
+    expect_box_error(test_use(foo/bar[x, alias = ]), 'alias without name provided in attach list')
 })

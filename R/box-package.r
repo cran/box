@@ -7,7 +7,7 @@
 #' @section Using modules & packages:
 #'
 #' \itemize{
-#'  \item \code{\link{use}}
+#'  \item \code{\link[=use]{box::use}}
 #' }
 #'
 #' @section Writing modules:
@@ -15,9 +15,10 @@
 #' Infrastructure and utility functions that are mainly used inside modules.
 #'
 #' \itemize{
-#'  \item \code{\link{file}}
-#'  \item \code{\link{name}}
-#'  \item \code{\link{register_S3_method}}
+#   \item \code{\link[=export]{box::export}}
+#'  \item \code{\link[=file]{box::file}}
+#'  \item \code{\link[=name]{box::name}}
+#'  \item \code{\link[=register_S3_method]{box::register_S3_method}}
 #'  \item \link{mod-hooks}
 #' }
 #'
@@ -26,9 +27,10 @@
 #' Functions for use in interactive sessions and for testing.
 #'
 #' \itemize{
-#'  \item \code{\link{help}}
-#'  \item \code{\link{unload}}, \code{\link{reload}}
-#'  \item \code{\link{set_script_path}}
+#'  \item \code{\link[=help]{box::help}}
+#'  \item \code{\link[=unload]{box::unload}}, \code{\link[=reload]{box::reload}}
+#'  \item \code{\link[=set_script_path]{box::set_script_path}}
+#'  \item \code{\link[=script_path]{box::script_path}}
 #' }
 #'
 #' @useDynLib box, .registration = TRUE
@@ -80,23 +82,44 @@ called_from_example = function () {
         called_from_example()
     ) return()
 
-    template = paste0(
-        'The %s package is not supposed to be attached.\n\n',
-        'Please consult the user guide at %s.'
-    )
-    help = sprintf('`vignette(\'%s\', package = \'%s\')`', pkgname, pkgname)
     is_bad_call = function (call) {
-        c = call[[1L]]
-        identical(c, quote(library)) || identical(c, quote(require))
+        as.character(call[[1L]]) %in% c('library', 'require')
     }
+
     # Deparsed to silence spurious `R CMD check` warnign
-    default = parse(text = 'library(box)')[[1L]]
+    default = call('library', quote(box))
     bad_call = Filter(is_bad_call, sys.calls())[1L][[1L]] %||% default
-    cond = structure(
-        list(message = sprintf(template, shQuote(pkgname), help), call = bad_call),
-        class = c('box_attach_error', 'error', 'condition')
+    throw(
+        'the {pkgname;\'} package is not supposed to be attached!\n\n',
+        'Please consult the user guide at `{vignette}`.',
+        vignette = call('vignette', pkgname, package = pkgname),
+        call = bad_call,
+        subclass = 'box_attach_error'
     )
-    stop(cond)
+}
+
+.onLoad = function (libname, pkgname) {
+    assign(
+        'system_mod_path',
+        system.file('mod', package = 'box'),
+        envir = topenv()
+    )
+
+    set_import_env_parent()
+}
+
+import_env_parent = NULL
+
+# Separate function for unit testing.
+set_import_env_parent = function () {
+    utils::assignInMyNamespace(
+        'import_env_parent',
+        if (getOption('box.warn.legacy', TRUE)) {
+            legacy_intercept_env
+        } else {
+            baseenv()
+        }
+    )
 }
 
 .onUnload = function (libpath) {

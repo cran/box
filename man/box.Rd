@@ -14,7 +14,7 @@ reminiscent of module systems in many other modern languages.
 
 
 \itemize{
- \item \code{\link{use}}
+ \item \code{\link[=use]{box::use}}
 }
 }
 
@@ -24,9 +24,9 @@ reminiscent of module systems in many other modern languages.
 Infrastructure and utility functions that are mainly used inside modules.
 
 \itemize{
- \item \code{\link{file}}
- \item \code{\link{name}}
- \item \code{\link{register_S3_method}}
+ \item \code{\link[=file]{box::file}}
+ \item \code{\link[=name]{box::name}}
+ \item \code{\link[=register_S3_method]{box::register_S3_method}}
  \item \link{mod-hooks}
 }
 }
@@ -37,9 +37,10 @@ Infrastructure and utility functions that are mainly used inside modules.
 Functions for use in interactive sessions and for testing.
 
 \itemize{
- \item \code{\link{help}}
- \item \code{\link{unload}}, \code{\link{reload}}
- \item \code{\link{set_script_path}}
+ \item \code{\link[=help]{box::help}}
+ \item \code{\link[=unload]{box::unload}}, \code{\link[=reload]{box::reload}}
+ \item \code{\link[=set_script_path]{box::set_script_path}}
+ \item \code{\link[=script_path]{box::script_path}}
 }
 }
 

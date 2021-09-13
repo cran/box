@@ -12,18 +12,6 @@ vignette: >
     %\VignetteIndexEntry{The hierarchy of module environments}
     %\VignetteEncoding{UTF-8}
 ---
----
-author: Konrad Rudolph
-date: 2021-04-22
-output:
-  md_document:
-    variant: gfm
-  rmarkdown::html_vignette:
-    toc: true
-title: The hierarchy of module environments
-vignette: |
-  % % %
----
 
 > **Note:** This document describes internal implementation details.
 > They are not required knowledge for users of the ‘box’ package and

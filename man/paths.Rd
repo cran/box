@@ -6,6 +6,7 @@
 \alias{calling_mod_path}
 \alias{split_path}
 \alias{merge_path}
+\alias{sanitize_path}
 \title{Path related functions}
 \usage{
 mod_search_path(caller)
@@ -15,6 +16,8 @@ calling_mod_path(caller)
 split_path(path)
 
 merge_path(components)
+
+sanitize_path(path)
 }
 \arguments{
 \item{caller}{the environment from which \code{box::use} was invoked.}

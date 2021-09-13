@@ -24,7 +24,7 @@ spec_name(spec)
 \item{spec}{named list of information the parser constructed from a given
 spec expression}
 
-\item{...}{further information about a spec, not represented by the spec
+\item{\dots}{further information about a spec, not represented by the spec
 expression parse tree}
 }
 \value{

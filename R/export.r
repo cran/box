@@ -1,3 +1,62 @@
+#' Explicitly declare module exports
+#'
+#' \code{box::export} explicitly marks a source file as a \pkg{box} module. If
+#' can be used as an alternative to the \code{@export} tag comment to declare a
+#' module’s exports.
+#'
+#' @usage \special{box::export(\dots)}
+#' @param \dots zero or more unquoted names that should be exported from the
+#' module.
+#' @return \code{box::export} has no return value. It is called for its
+#' side effect.
+#'
+#' @details
+#' \code{box::export} can be called inside a module to specify the module’s
+#' exports. If a module contains a call to \code{box::export}, this call
+#' overrides any declarations made via the \code{@export} tag comment. When a
+#' module contains multiple calls to \code{box::export}, the union of all thus
+#' defined names is exported.
+#'
+#' A module can also contain an argument-less call to \code{box::export}. This
+#' ensures that the module does not export any names. Otherwise, a module that
+#' defines names but does not mark them as exported would be treated as a
+#' \emph{legacy module}, and all default-visible names would be exported from
+#' it. Default-visible names are names not starting with a dot (\code{.}).
+#' Another use of \code{box::export()} is to enable a module without exports to
+#' use \link[=mod-hooks]{module event hooks}.
+#'
+#' @note The preferred way of declaring exports is via the \code{@export} tag
+#' comment. The main purpose of \code{box::export} is to explicitly prevent
+#' exports, by being called without arguments.
+#'
+#' @seealso
+#' \code{\link[=use]{box::use}} for information on declaring exports via
+#' \code{@export}.
+#' @export
+export = function (...) {
+    mod_ns = mod_topenv(parent.frame())
+    if (! is_namespace(mod_ns)) {
+        throw('{"export";"} can only be called from inside a module')
+    }
+
+    names = as.list(match.call())[-1L]
+    for (name in names) {
+        if (! is.name(name)) {
+            throw(
+                '{"export()";"} requires a list of unquoted names; ',
+                '{name;"} is not a name'
+            )
+        }
+    }
+
+    namespace_info(mod_ns, 'exports') = union(
+        namespace_info(mod_ns, 'exports'),
+        as.character(unlist(names))
+    )
+    namespace_info(mod_ns, 'legacy') = FALSE
+    invisible()
+}
+
 #' Find exported names in parsed module source
 #'
 #' @param info The module info.
@@ -32,40 +91,41 @@ parse_export_specs = function (info, exprs, mod_ns) {
 
     reexport_names = function (declaration, alias, export) {
         spec = parse_spec(declaration, alias)
-        import_ns = find_matching_import(namespace_info(mod_ns, 'imports'), spec)
-        info = attr(import_ns, 'info')
+        import = find_matching_import(namespace_info(mod_ns, 'imports'), spec)
 
-        if (is_mod_still_loading(info)) {
+        if (is_mod_still_loading(import$info)) {
             if (! is.null(spec$attach)) {
-                msg = paste0(
-                    'Invalid attempt to export names from an incompletely ',
-                    'loaded, cyclic import (module %s) in line %d.'
+                throw(
+                    'invalid attempt to export names from an incompletely ',
+                    'loaded, cyclic import (module {name;"}) in line {line}',
+                    name = spec$name,
+                    line = attr(export, 'location')[1L]
                 )
-                stop(sprintf(msg, dQuote(spec$name), attr(export, 'location')[1L]))
             }
 
             return(spec$alias)
         }
 
-        export_names = mod_export_names(info, import_ns)
+        export_names = mod_export_names(import$info, import$ns)
         real_alias = if (is.null(spec$attach) || spec$explicit) spec$alias
         c(names(attach_list(spec, export_names)), real_alias)
     }
 
     find_matching_import = function (imports, reexport) {
         for (import in imports) {
-            if (identical(attr(import, 'spec'), reexport)) return(import)
+            if (identical(import$spec, reexport)) return(import)
         }
     }
 
     block_error = function (export) {
-        code = deparse(attr(export, 'call'), backtick = TRUE)
-        location = attr(export, 'location')[1L]
-        msg = paste0(
-            'The %s tag may only be applied to assignments or %s ',
-            'statements.\nUsed incorrectly in line %d:\n    %s'
+        throw(
+            'the {"@export";"} tag may only be applied to assignments or ',
+            '{"use";"} declarations;\n',
+            'used incorrectly in line {location}:\n',
+            '    {paste(code, collapse = "\n    ")}',
+            code = deparse(attr(export, 'call'), backtick = TRUE),
+            location = attr(export, 'location')[1L]
         )
-        stop(sprintf(msg, dQuote('@export'), dQuote('use'), location, paste(code, collapse = '\n    ')))
     }
 
     exports = parse_export_tags(info, exprs, mod_ns)
@@ -232,12 +292,14 @@ roxygen2_object = function (alias, value, type) {
 #' \code{srcref}, but extended to include the preceding comment block.
 #' @keywords internal
 add_comments = function (refs) {
+    if (length(refs) == 0L) return(list())
+
     block_end_lines = map_int(`[[`, refs, 3L)
     block_end_bytes = map_int(`[[`, refs, 4L)
     block_start_lines = c(1L, block_end_lines[-length(block_end_lines)] + 1L)
-    srcfile = attr(refs[[1L]], 'srcfile')
-    llocs = map(c, block_start_lines, list(1L), block_end_lines, block_end_bytes)
-    map(srcref, list(srcfile), llocs)
+    srcfiles = map(attr, refs, 'srcfile')
+    llocs = map(c, block_start_lines, 1L, block_end_lines, block_end_bytes)
+    map(srcref, srcfiles, llocs)
 }
 
 #' Find \code{@export} tags in code regions

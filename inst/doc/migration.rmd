@@ -12,18 +12,6 @@ vignette: >
     %\VignetteIndexEntry{Migration guide}
     %\VignetteEncoding{UTF-8}
 ---
----
-author: Konrad Rudolph
-date: 2021-04-22
-output:
-  md_document:
-    variant: gfm
-  rmarkdown::html_vignette:
-    toc: true
-title: Migration guide
-vignette: |
-  % % %
----
 
 ## ‘modules’ “v1.0” == ‘box’
 
@@ -222,7 +210,21 @@ box::use(
 ```
 
 The above code will export the names `pkg_alias`, `mod`, `a`, `b` and
-`c`.
+`c`. This replaces the function `export_submodule` from ‘modules’, which
+no longer exists.
+
+There’s one exception to this: if a module contains *no* declared
+export, ‘box’ assumes that it is a plain R script, and treats it as a
+*legacy module*. This causes ‘box’ to revert to the export behaviour of
+‘modules’. To suppress this behaviour (that is, to create a module which
+explicitly doesn’t export any names), module authors can add the
+following declaration to their module source code, which explicitly
+declares that the source file is to be treated as a module with no
+exports:
+
+```{r eval = FALSE}
+box::export()
+```
 
 ## Accessing default packages
 
@@ -236,7 +238,14 @@ the package ‘methods’ is added).
 
 ‘box’ modules no longer attach *any* packages by default, except ‘base’.
 If a module needs to use functions from those other packages, it needs
-to declare them explicitly (e.g. via `box::use(stats)`).
+to declare them explicitly (e.g. via `box::use(stats)`). If users want
+to import all default R packages, they can import the module `r/core`
+for this purpose. The following declaration approximates the behaviour
+of ‘modules’:
+
+```{r eval = FALSE}
+box::use(r/core[...])
+```
 
 ## Loading parents of nested modules
 

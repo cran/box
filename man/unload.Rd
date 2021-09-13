@@ -5,39 +5,51 @@
 \alias{reload}
 \title{Unload or reload a given module}
 \usage{
-unload(mod)
+\special{box::unload(mod)}
 
-reload(mod)
+\special{box::reload(mod)}
 }
 \arguments{
-\item{mod}{the module reference to be unloaded or reloaded}
+\item{mod}{a module object to be unloaded or reloaded}
 }
 \value{
 \code{box::unload} and \code{box::reload} are called for their
-side-effect. They do not return anything.
+side effect. They do not return anything.
 }
 \description{
-Unload a given module or reload it from its source.
+Given a module which has been previously loaded and is assigned to an alias
+\code{mod}, \code{unload(mod} unloads it; \code{reload(mod)} unloads and
+reloads it from its source.
 }
 \details{
 Unloading a module causes it to be purged from the internal cache such that
 the next subsequent \code{box::use} declaration will reload the module from
-its source. \code{reload} is a shortcut for unloading a module and calling
-\code{box::use} in the same scope with the same parameters as the
-\code{box::use} call that originally loaded the current module instance.
+its source. \code{box::reload} unloads and reloads the specified modules and
+all its transitive module dependencies. \code{box::reload} is \emph{not}
+merely a shortcut for calling \code{box::unload} followed by \code{box::use},
+because \code{box::unload} only unloads the specified module itself, not any
+dependent modules.
 }
 \note{
 Any other references to the loaded modules remain unchanged, and will
-still work. Unloading and reloading modules is primarily useful for testing
-during development, and should not be used in production code.
+(usually) still work. Unloading and reloading modules is primarily useful for
+testing during development, and \emph{should not be used in production code:}
+in particular, unloading may break other module references if the
+\code{.on_unload} hook unloaded any binary shared libraries which are still
+referenced.
 
-\code{unload} and \code{reload} come with a few restrictions. \code{unload}
-attempts to detach names attached by the corresponding \code{box::use} call.
-\code{reload} attempts to re-attach these same names. This only works if the
-corresponding \code{box::use} declaration is located in the same scope.
+\code{box::unload} and \code{box::reload} come with a few restrictions.
+\code{box::unload} attempts to detach names attached by the corresponding
+\code{box::use} call.
+\code{box::reload} attempts to re-attach these same names. This only works if
+the corresponding \code{box::use} declaration is located in the same scope.
 
-\code{reload} will re-execute the \code{.on_load} hook of the module.
+\code{box::unload} will execute the \code{.on_unload} hook of the module, if
+it exists.
+\code{box::reload} will re-execute the \code{.on_load} hook of the module and
+of all dependent modules during loading (after executing the corresponding
+\code{.on_unload} hooks during unloading).
 }
 \seealso{
-\code{\link{use}}, \link{mod-hooks}
+\code{\link[=use]{box::use}}, \link[=mod-hooks]{module hooks}
 }

@@ -30,13 +30,48 @@ enable_s3_lookup = function (ns_env, info) {
     # TODO: Create S3 methods table
 }
 
+import_decl = function (ns, spec, info) {
+    structure(list(ns = ns, spec = spec, info = info), class = 'box$import_decl')
+}
+
 make_imports_env = function (info) {
     structure(
-        new.env(parent = baseenv()),
+        new.env(parent = import_env_parent),
         name = paste0('imports:', info$name),
         class = 'box$imports'
     )
 }
+
+legacy_warn_msg = c(
+    'Using {call;"} inside a module may cause issues; see the FAQ at ',
+    '`{call("vignette", "faq", package = "box")}` for details.'
+)
+
+box_library = function (...) {
+    warning(fmt(legacy_warn_msg, call = 'library'))
+    eval.parent(`[[<-`(match.call(), 1L, library))
+}
+
+box_require = function (...) {
+    warning(fmt(legacy_warn_msg, call = 'require'))
+    eval.parent(`[[<-`(match.call(), 1L, require))
+}
+
+box_source = function (file, local = FALSE, ...) {
+    if (is.logical(local) && ! local) {
+        warning(fmt(legacy_warn_msg, call = 'source'))
+    }
+    eval.parent(`[[<-`(match.call(), 1L, source))
+}
+
+legacy_intercept_env = list2env(
+    list(
+        library = box_library,
+        require = box_require,
+        source = box_source
+    ),
+    parent = baseenv()
+)
 
 #' \code{is_namespace} checks whether a given environment corresponds to a
 #' module namespace.
@@ -63,6 +98,7 @@ namespace_info = function (ns, which, default = NULL) {
 
 #' Get a module’s name
 #'
+#' @usage \special{box::name()}
 #' @return \code{box::name} returns a character string containing the name of
 #' the module, or \code{NULL} if called from outside a module.
 #' @note Because this function returns \code{NULL} if not invoked inside a
@@ -125,7 +161,7 @@ strict_extract = function (e1, e2) {
 `print.box$mod` = function (x, ...) {
     spec = attr(x, 'spec')
     type = if (inherits(spec, 'pkg_spec')) 'package' else 'module'
-    cat(sprintf('<%s: %s>\n', type, spec_name(spec)))
+    cat(fmt('<{type}: {spec_name(spec)}>\n'))
     invisible(x)
 }
 

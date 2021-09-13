@@ -4,22 +4,40 @@
 \alias{use}
 \title{Import a module or package}
 \usage{
-use(...)
+\special{box::use(prefix/mod, \dots)}
+
+\special{box::use(pkg, \dots)}
+
+\special{box::use(alias = prefix/mod, \dots)}
+
+\special{box::use(alias = pkg, \dots)}
+
+\special{box::use(prefix/mod[attach_list], \dots)}
+
+\special{box::use(pkg[attach_list], \dots)}
 }
 \arguments{
-\item{...}{one or more module import declarations, see \sQuote{Details} for a
-description of the format.}
+\item{\dots}{further import declarations}
+
+\item{prefix/mod}{a qualified module name}
+
+\item{pkg}{a package name}
+
+\item{alias}{an alias name}
+
+\item{attach_list}{a list of names to attached, optionally witha aliases of
+the form \code{alias = name}; or the special placeholder name \code{\dots}}
 }
 \value{
 \code{box::use} has no return value. It is called for its
-side-effect.
+side effect.
 }
 \description{
 \code{box::use} imports one or more modules and/or packages, and makes them
 available in the calling environment.
 }
 \details{
-\code{box::use(...)} specifies a list of one or more import declarations,
+\code{box::use(\dots)} specifies a list of one or more import declarations,
 given as individual arguments to \code{box::use}, separated by comma. Each
 import declaration takes one of the following forms:
 
@@ -51,13 +69,13 @@ import declaration takes one of the following forms:
 
      The \code{\var{attach_list}} is a comma-separated list of names,
      optionally with aliases assigned via \code{alias = name}. The list can
-     also contain the special symbol \code{...}, which causes \emph{all}
+     also contain the special symbol \code{\dots}, which causes \emph{all}
      exported names of the module/package to be imported.
 }
 }
 
-See the vignette at \code{vignette('box')} for detailed examples of the
-different types of use declarations listed above.
+See the vignette at \code{vignette('box', 'box')} for detailed examples of
+the different types of use declarations listed above.
 }
 \section{Import semantics}{
 
@@ -76,7 +94,29 @@ not outside it (nor in other modules which might be loaded).
 Member access of (non-attached) exported names of modules and packages
 happens via the \code{$} operator. This operator does not perform partial
 argument matching, in contrast with the behavior of the \code{$} operator in
-base R, which matches partial names.
+base \R, which matches partial names.
+}
+
+\section{Export specification}{
+
+
+Names defined in modules can be marked as \emph{exported} by prefixing them
+with an \code{@export} tag comment; that is, the name needs to be immediately
+prefixed by a comment that reads, verbatim, \code{#' @export}. That line may
+optionally be part of a \pkg{roxygen2} documentation for that name.
+
+Alternatively, exports may be specified via the
+\code{\link[=export]{box::export}} function, but using declarative
+\code{@export} tags is generally preferred.
+
+A module which has not declared any exports is treated as a \emph{legacy
+module} and exports \emph{all} default-visible names (that is, all names that
+do not start with a dot (\code{.}). This usage is present only for backwards
+compatibility with plain \R scripts, and its usage is \emph{not recommended}
+when writing new modules.
+
+To define a module that exports no names, call \code{box::export()} without
+arguments. This prevents the module from being treated as a legacy module.
 }
 
 \section{Search path}{
@@ -88,6 +128,13 @@ considered last. That is, if a file \file{a/b.r} exists both locally in the
 current directory and in a module search path, the local file \file{./a/b.r}
 will \emph{not} be loaded, unless the import is explicitly declared as
 \code{box::use(./a/b)}.
+
+Modules in the module search path \emph{must be organised in subfolders}, and
+must be imported fully qualified. Keep in mind that \code{box::use(name)}
+will \emph{never} attempt to load a module; it always attempts to load a
+package. A common module organisation is by project, company or user name;
+for instance, fully qualified module names could mirror repository names on
+source code sharing websites (such as GitHub).
 
 Given a declaration \code{box::use(a/b)} and a search path \file{\var{p}}, if
 the file \file{\var{p}/a/b.r} does not exist, \pkg{box} alternatively looks
@@ -102,11 +149,11 @@ separated by the platform’s path separator (i.e. \code{;} on Windows, and
 \code{:} on most other platforms).
 
 The \emph{current directory} is context-dependent: inside a module, the
-directory corresponds to the module’s directory. Inside an R code file
+directory corresponds to the module’s directory. Inside an \R code file
 invoked from the command line, it corresponds to the directory containing
 that file. If the code is running inside a \pkg{Shiny} application or a
 \pkg{knitr} document, the directory of the execution is used. Otherwise (e.g.
-in an interactive R session), the current working directory as given by
+in an interactive \R session), the current working directory as given by
 \code{getwd()} is used.
 
 Local import declarations (that is, module prefixes that start with \code{./}
@@ -120,15 +167,15 @@ directory (for \code{../}) is looked at. \code{../} can be nested:
 
 Modules can contain S3 generics and methods. To override known generics
 (= those defined outside the module), methods inside a module need to be
-registered using \code{\link{register_S3_method}}. See the documentation
-there for details.
+registered using \code{\link[=register_S3_method]{box::register_S3_method}}.
+See the documentation there for details.
 }
 
 \section{Module names}{
 
-A module’s full name consists of one or more R names separated by \code{/}.
-Since \code{box::use} declarations contain R expressions, the names need to
-be valid R names. Non-syntactic names need to be wrapped in backticks; see
+A module’s full name consists of one or more \R names separated by \code{/}.
+Since \code{box::use} declarations contain \R expressions, the names need to
+be valid \R names. Non-syntactic names need to be wrapped in backticks; see
 \link[base]{Quotes}.
 
 Furthermore, since module names usually correspond to file or folder names,
@@ -169,10 +216,12 @@ local({
 })
 }
 \seealso{
-\code{\link{name}} and \code{\link{file}} give information about loaded
-modules.
-\code{\link{help}} displays help for a module’s exported names.
-\code{\link{unload}} and \code{\link{reload}} aid during module development
-by performing dynamic unloading and reloading of modules in a running R
-session.
+\code{\link[=name]{box::name}} and \code{\link[=file]{box::file}} give
+information about loaded modules.
+\code{\link[=help]{box::help}} displays help for a module’s exported names.
+\code{\link[=unload]{box::unload}} and \code{\link[=reload]{box::reload}} aid
+during module development by performing dynamic unloading and reloading of
+modules in a running \R session.
+\code{\link[=export]{box::export}} can be used inside a module to declare
+module exports.
 }

@@ -1,17 +1,18 @@
 #' Display module documentation
 #'
-#' \code{help} displays help on a module’s objects and functions in much
+#' \code{box::help} displays help on a module’s objects and functions in much
 #' the same way \code{\link[utils]{help}} does for package contents.
 #'
+#' @usage \special{box::help(topic, help_type = getOption("help_type", "text"))}
 #' @param topic either the fully-qualified name of the object or function to get
 #'  help for, in the format \code{module$function}; or a name that was exported
 #'  and attached from an imported module or package.
 #' @param help_type character string specifying the output format; currently,
 #'  only \code{'text'} is supported.
-#' @return \code{help} is called for its side-effect when called directly from
-#' the command prompt.
+#' @return \code{box::help} is called for its side effect when called directly
+#' from the command prompt.
 #' @details
-#' See the vignette in \code{vignette('box', 'box')} for more information on
+#' See the vignette at \code{vignette('box', 'box')} for more information about
 #' displaying help for modules.
 #' @export
 help = function (topic, help_type = getOption('help_type', 'text')) {
@@ -21,10 +22,7 @@ help = function (topic, help_type = getOption('help_type', 'text')) {
     subject = target[[2L]]
 
     if (! inherits(target_mod, 'box$mod')) {
-        stop(
-            dQuote(deparse(topic)), ' is not a valid module help topic',
-            call. = FALSE
-        )
+        throw('{topic;"} is not a valid module help topic')
     }
 
     if (subject != '.__module__.') {
@@ -52,10 +50,7 @@ help = function (topic, help_type = getOption('help_type', 'text')) {
     }
 
     if (! requireNamespace('roxygen2')) {
-        stop(
-            sprintf('Displaying documentation requires %s installed', sQuote('roxygen2')),
-            call. = FALSE
-        )
+        throw('displaying documentation requires {"roxygen2";\'} installed')
     }
 
     mod_ns = attr(target_mod, 'namespace')
@@ -70,20 +65,13 @@ help = function (topic, help_type = getOption('help_type', 'text')) {
 
     if (is.null(doc)) {
         if (subject == '.__module__.') {
-            stop(
-                'No documentation available for ', dQuote(mod_name),
-                call. = FALSE
-            )
+            throw('no documentation available for {mod_name;"}')
         } else {
-            stop(
-                'No documentation available for ', dQuote(subject),
-                ' in module ', dQuote(mod_name),
-                call. = FALSE
-            )
+            throw('no documentation available for {subject;"} in module {mod_name;"}')
         }
     }
 
-    display_help(doc, paste0('module:', mod_name), help_type)
+    display_help(doc, mod_name, help_type)
 }
 
 #' Parse a module’s documentation
@@ -160,13 +148,12 @@ help_topic_target = function (topic, caller) {
             mod = Recall(mod, expr[[2L]])
             as.character(expr[[3L]])
         } else {
-            stop(
-                dQuote(deparse(topic)), ' is not a valid module help topic',
-                call. = FALSE
-            )
+            throw('{topic;"} is not a valid module help topic', call = call)
         }
         get(name, envir = mod)
     }
+
+    call = sys.call(-1L)
 
     if (is.name(topic)) {
         obj = inner_mod(caller, topic)

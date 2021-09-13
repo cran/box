@@ -12,18 +12,6 @@ vignette: >
     %\VignetteIndexEntry{Get started}
     %\VignetteEncoding{UTF-8}
 ---
----
-author: Konrad Rudolph
-date: 2021-04-22
-output:
-  md_document:
-    variant: gfm
-  rmarkdown::html_vignette:
-    toc: true
-title: Get started
-vignette: |
-  % % %
----
 
 ## Using modules
 
@@ -136,7 +124,7 @@ getS3method('print', 'bio/seq')
     ##     )
     ##     invisible(x)
     ## }
-    ## <environment: 0x7f91493464f0>
+    ## <environment: 0x7fd2df055a48>
 
 The source code for `print.bio/seq` contains an interesting `use`
 declaration. It show-cases an alternative way of invoking `box::use`,
@@ -213,10 +201,11 @@ distinction between local and global scope:
 search()
 ```
 
-    ##  [1] ".GlobalEnv"        "mod:bio/seq"       "devtools_shims"   
-    ##  [4] "package:testthat"  "package:stats"     "package:graphics" 
-    ##  [7] "package:grDevices" "package:utils"     "package:datasets" 
-    ## [10] "package:methods"   "Autoloads"         "package:base"
+    ##  [1] ".GlobalEnv"        "mod:bio/seq"       "mod:./source_file"
+    ##  [4] "devtools_shims"    "package:testthat"  "package:stats"    
+    ##  [7] "package:graphics"  "package:grDevices" "package:utils"    
+    ## [10] "package:datasets"  "renv:shims"        "package:methods"  
+    ## [13] "Autoloads"         "package:base"
 
 Note the second item, which reads “<code>mod:bio/seq</code>”. But let’s
 now undo that, to attach (and use) the module locally instead:
@@ -250,10 +239,11 @@ different output). And note that the `seq` module’s `table` function is
 search()
 ```
 
-    ##  [1] ".GlobalEnv"        "devtools_shims"    "package:testthat" 
-    ##  [4] "package:stats"     "package:graphics"  "package:grDevices"
-    ##  [7] "package:utils"     "package:datasets"  "package:methods"  
-    ## [10] "Autoloads"         "package:base"
+    ##  [1] ".GlobalEnv"        "mod:./source_file" "devtools_shims"   
+    ##  [4] "package:testthat"  "package:stats"     "package:graphics" 
+    ##  [7] "package:grDevices" "package:utils"     "package:datasets" 
+    ## [10] "renv:shims"        "package:methods"   "Autoloads"        
+    ## [13] "package:base"
 
 ```{r eval = FALSE}
 table(s)
@@ -293,7 +283,7 @@ In fact, there are only three things worth mentioning:
     similarly to ‘roxygen2’ (but does *not* require having that package
     installed).
 
-3.  The module exports [S3 functions](http://adv-r.had.co.nz/S3.html).
+3.  The module exports [S3 functions](https://adv-r.hadley.nz/s3.html).
     The ‘box’ package takes care to register such functions
     automatically but this only works for *user generics* that are
     defined inside the same module. When overriding “known generics”
@@ -375,6 +365,8 @@ We can illustrate this by loading a module which has side-effects,
         'Module path: "', basename(box::file()), '"'
     )
 }
+
+box::export() # Mark as a ‘box’ module.
 ```
 
 Let’s use it:

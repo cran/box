@@ -9,6 +9,8 @@
 #  .on_load = function (ns) {
 #      test_dir(box::file())
 #  }
+#  
+#  box::export()
 
 ## ----eval = FALSE-------------------------------------------------------------
 #  box::use(../seq[...])

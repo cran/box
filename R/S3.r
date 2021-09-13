@@ -1,12 +1,13 @@
 #' Register S3 methods
 #'
-#' \code{register_S3_method} makes an S3 method for a given generic and class
-#' known inside a module.
+#' \code{box::register_S3_method} makes an S3 method for a given generic and
+#' class known inside a module.
 #'
+#' @usage \special{box::register_S3_method(name, class, method)}
 #' @param name the name of the generic as a character string.
 #' @param class the class name.
 #' @param method the method to register.
-#' @return \code{register_S3_method} is called for its side-effect.
+#' @return \code{register_S3_method} is called for its side effect.
 #'
 #' @details Methods for generics defined in the same module do not need to be
 #' registered explicitly, and indeed \emph{should not} be registered. However,
@@ -14,11 +15,11 @@
 #' module, e.g. \code{\link{print}}), then this needs to be made known
 #' explicitly.
 #'
-#' See the vignette in \code{vignette('box', 'box')} for more information on
+#' See the vignette at \code{vignette('box', 'box')} for more information about
 #' defining S3 methods inside modules.
 #'
 #' @note \strong{Do not} call \code{\link[base]{registerS3method}} inside a
-#' module. Only use \code{register_S3_method}. This is important for the
+#' module. Only use \code{box::register_S3_method}. This is important for the
 #' module’s own book-keeping.
 #' @export
 register_S3_method = function (name, class, method) {
@@ -43,17 +44,37 @@ register_S3_method = function (name, class, method) {
 #' @keywords internal
 #' @name s3
 is_S3_user_generic = function (function_name, envir = parent.frame()) {
-    is_S3 = function (b) {
-        if (length(b) == 0L) FALSE
-        else if (is.function(b)) b = body(b)
-        else if (is.call(b)) {
-            is_s3_dispatch = is.name(b[[1L]]) && b[[1L]] == 'UseMethod'
-            is_s3_dispatch || is_S3(as.list(b)[-1L])
-        } else is.recursive(b) && (is_S3(b[[1L]]) || is_S3(b[-1L]))
-    }
-
     ! bindingIsActive(function_name, envir) &&
         is_S3(body(get(function_name, envir = envir, mode = 'function')))
+}
+
+is_S3 = function (expr) {
+    if (length(expr) == 0L) {
+        FALSE
+    } else if (is.function(expr)) {
+        FALSE
+    } else if (is.call(expr)) {
+        fun = expr[[1L]]
+        if (is.name(fun)) {
+            # NB: this is relying purely on static analysis. We do not test
+            # whether these calls actually refer to the expected base R
+            # functions since that would require evaluating the function body in
+            # the general case (namely, the function body itself could redefine
+            # them).
+            if (identical(fun, quote(UseMethod))) return(TRUE)
+            # Make sure nested function definitions are *not* getting
+            # traversed: `UseMethod` inside a nested function does not make
+            # the containing function a generic.
+            if (identical(fun, quote(`function`))) return(FALSE)
+            Recall(as.list(expr)[-1])
+        } else {
+            Recall(fun) || Recall(expr[-1L])
+        }
+    } else if (is.recursive(expr)) {
+        Recall(expr[[1L]]) || Recall(expr[-1L])
+    } else {
+        FALSE
+    }
 }
 
 #' @param module the module object for which to register S3 methods

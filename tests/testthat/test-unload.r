@@ -27,3 +27,38 @@ test_that('unload checks its arguments', {
     box::use(mod/a)
     expect_error(box::unload((a)))
 })
+
+test_that('unloading calls unload hook', {
+    box::use(mod/reload/a)
+    expect_message(box::unload(a), '^a unloaded')
+})
+
+test_that('unloading does not unload dependencies', {
+    box::use(mod/reload/a)
+    expect_messages(
+        box::unload(a),
+        has = '^a unloaded',
+        has_not = '^c unloaded'
+    )
+})
+
+test_that('`unload` shows expected errors', {
+    old_opts = options(useFancyQuotes = FALSE)
+    on.exit(options(old_opts))
+
+    expect_box_error(
+        box::unload(mod/a),
+        '"unload" expects a module object, got "mod/a"'
+    )
+    expect_box_error(
+        box::unload(./a),
+        '"unload" expects a module object, got "./a"'
+    )
+    expect_box_error(box::unload(na), 'object "na" not found')
+
+    x = 1L
+    expect_box_error(
+        box::unload(x),
+        '"unload" expects a module object, got "x", which is of type "integer" instead'
+    )
+})

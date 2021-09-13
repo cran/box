@@ -4,7 +4,7 @@
 \alias{help}
 \title{Display module documentation}
 \usage{
-help(topic, help_type = getOption("help_type", "text"))
+\special{box::help(topic, help_type = getOption("help_type", "text"))}
 }
 \arguments{
 \item{topic}{either the fully-qualified name of the object or function to get
@@ -15,14 +15,14 @@ and attached from an imported module or package.}
 only \code{'text'} is supported.}
 }
 \value{
-\code{help} is called for its side-effect when called directly from
-the command prompt.
+\code{box::help} is called for its side effect when called directly
+from the command prompt.
 }
 \description{
-\code{help} displays help on a module’s objects and functions in much
+\code{box::help} displays help on a module’s objects and functions in much
 the same way \code{\link[utils]{help}} does for package contents.
 }
 \details{
-See the vignette in \code{vignette('box', 'box')} for more information on
+See the vignette at \code{vignette('box', 'box')} for more information about
 displaying help for modules.
 }

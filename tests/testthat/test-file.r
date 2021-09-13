@@ -11,7 +11,7 @@ test_that('box::file works for module', {
     box::use(mod/a)
     expect_true(grepl('/b$', box::file('b', module = a)))
     expect_true(grepl('/c\\.r$', box::file('c.r', module = a)))
-    expect_equal(length(box::file(c('b', 'c.r'), module = a)), 2L)
+    expect_length(box::file(c('b', 'c.r'), module = a), 2L)
 })
 
 test_that('box::base_path works', {
@@ -19,13 +19,13 @@ test_that('box::base_path works', {
     # On earlier versions of “devtools”, this test reproducibly segfaulted due
     # to the call to `load_all` from within a script. This seems to be fixed now
     # with version 1.9.1.9000.
-    script_path = 'mod/devtools_segfault.r'
+    script_path = 'support/devtools_segfault.r'
 
     rcmd_result = rcmd(script_path)
-    expect_paths_equal(rcmd_result, file.path(getwd(), 'mod'))
+    expect_paths_equal(rcmd_result, file.path(getwd(), 'support'))
 
     rscript_result = rscript(script_path)
-    expect_paths_equal(rscript_result, file.path(getwd(), 'mod'))
+    expect_paths_equal(rscript_result, file.path(getwd(), 'support'))
 })
 
 test_that('box::file works after attaching modules', {
@@ -67,7 +67,7 @@ test_that('regression #76 is fixed', {
 
 test_that('regression #79 is fixed', {
     skip_outside_source_repos()
-    script_path = 'mod/issue79.r'
+    script_path = 'support/issue79.r'
     result = tail(interactive_r(script_path), 3L)
 
     expect_equal(result[1L], '> before; after')
@@ -101,6 +101,6 @@ test_that('split_path is working on Unix', {
 test_that('split_path is working on Windows', {
     if (.Platform$OS.type != 'windows') skip('Only run on Windows')
 
-    # Standard paths
-    # UNC paths
+    # TODO: Standard paths
+    # TODO: UNC paths
 })

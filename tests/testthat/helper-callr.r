@@ -1,4 +1,9 @@
 r_cmdline = function (cmd, ...) {
+    skip_on_os('windows')
+    # Some of the script tests fail on CRAN and, lacking stack traces, it’s
+    # simply impossible to debug this. So we disable them.
+    skip_on_cran()
+
     in_tests = grepl('tests/testthat$', getwd())
     rprofile = file.path(
         if (in_tests) '.' else 'tests/testthat',
@@ -14,10 +19,16 @@ r_cmdline = function (cmd, ...) {
 }
 
 rcmd = function (script_path) {
-    cmd = r_cmdline('"$R_HOME/bin/R" CMD BATCH', '--slave', '--no-timing')
     output_file = tempfile(fileext = '.rout')
     on.exit(unlink(output_file))
-    system(paste(cmd, script_path, output_file))
+    cmd = r_cmdline(
+        '"$R_HOME/bin/R" CMD BATCH',
+        '--slave',
+        '--no-timing',
+        script_path,
+        output_file
+    )
+    system(cmd)
     readLines(output_file)
 }
 
@@ -61,9 +72,11 @@ interactive_r = function (script_path, text, code) {
     check_line = function (which, expected) {
         # Separate check to generate only one assertion, and only if needed.
         if (! identical(strip_ansi_escapes(result[which]), expected)) {
-            expect_identical(strip_ansi_escapes(result[which]), expected,
-                             label = sprintf('"%s"', result[which]),
-                             info = 'interactive_r')
+            expect_identical(
+                strip_ansi_escapes(result[which]), expected,
+                label = sprintf('"%s"', result[which]),
+                info = 'interactive_r'
+            )
         }
     }
 

@@ -27,7 +27,8 @@ test_that('local path is searched globally', {
     old_opts = options(box.path = NULL)
     on.exit(options(old_opts))
 
-    expect_paths_equal(mod_search_path(environment()), getwd())
+    path = utils::tail(mod_search_path(environment()), 1L)
+    expect_paths_equal(path, getwd())
 })
 
 test_that('local path is searched in module', {
@@ -63,8 +64,37 @@ test_that('all module file candidates are found', {
 test_that('script path can be set manually', {
     on.exit(box::set_script_path())
 
-    expect_paths_equal(script_path(), getwd())
+    expect_paths_equal(module_path(), getwd())
 
     box::set_script_path('mod/b/a.r')
-    expect_equal(script_path(), 'mod/b')
+    expect_equal(module_path(), 'mod/b')
+})
+
+test_that('script path can be queried', {
+    path = 'some/script.r'
+    box::set_script_path(path)
+    expect_equal(box::script_path(), path)
+    expect_equal(box::set_script_path(), path)
+    expect_null(box::script_path())
+})
+
+test_that('can execute a script with spaces in path', {
+    # Generate the test case dynamically since `R CMD check` complains if there
+    # are paths with spaces in the package source directory.
+    path = 'support/path with spaces'
+    dir.create(path)
+    on.exit(unlink(path, recursive = TRUE))
+    writeLines(c(
+        '.on_load = function (ns) cat("path with spaces\\n")',
+        'box::export()'
+    ), file.path(path, 'a.r'))
+    writeLines('box::use(./a)', file.path(path, 'script.r'))
+
+    rscript_out = rscript(file.path(path, 'script.r'))
+    expect_equal(rscript_out, 'path with spaces')
+})
+
+test_that('modules are found during Shiny startup', {
+    script_path = rscript('support/run-shiny.r')
+    expect_paths_equal(script_path, 'support/shiny-app')
 })

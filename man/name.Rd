@@ -4,7 +4,7 @@
 \alias{name}
 \title{Get a module’s name}
 \usage{
-name()
+\special{box::name()}
 }
 \value{
 \code{box::name} returns a character string containing the name of

@@ -6,20 +6,21 @@ is_module_loaded = function (mod) {
 
 test_teardown(clear_mods())
 
-module_path = function (mod) {
+module_source_path = function (mod) {
     attr(mod, 'info')$source_path
 }
 
 test_that('module can be imported', {
     box::use(mod/a)
     expect_true(is_module_loaded(a))
-    expect_true('double' %in% ls(a))
+    expect_in('double', ls(a))
 })
 
 test_that('import works in global namespace', {
     in_globalenv({
         box::use(mod/a)
         expect_true(box:::is_mod_loaded(attr(a, 'info')))
+        # `expect_in` isn’t found here.
         expect_true('double' %in% ls(a))
     })
 })
@@ -29,9 +30,9 @@ test_that('module is uniquely identified by path', {
     box::use(ba = mod/b/a)
     expect_true(is_module_loaded(a))
     expect_true(is_module_loaded(ba))
-    expect_not_identical(module_path(a), module_path(ba))
-    expect_true('double' %in% ls(a))
-    expect_false('double' %in% ls(ba))
+    expect_not_identical(module_source_path(a), module_source_path(ba))
+    expect_in('double', ls(a))
+    expect_not_in('double', ls(ba))
 })
 
 test_that('can use imported function', {
@@ -72,7 +73,7 @@ test_that('module bindings are locked', {
     expect_true(bindingIsLocked('modname', a))
 
     err = try({a$counter = 2L}, silent = TRUE)
-    expect_equal(class(err), 'try-error')
+    expect_s3_class(err, 'try-error')
 })
 
 test_that('modules don’t need exports', {
@@ -80,6 +81,11 @@ test_that('modules don’t need exports', {
     expect_error(box::use(mod/no_exports), NA)
     expect_error(capture.output(box::use(mod/no_names)), NA)
     expect_setequal(ls(), c('no_exports', 'no_names'))
+})
+
+test_that('modules can be empty', {
+    expect_error(box::use(mod/empty), NA)
+    expect_error(box::use(mod/export_empty), NA)
 })
 
 test_that('global scope is not leaking into modules', {
@@ -94,9 +100,10 @@ test_that('package exports do not leak into modules', {
     box::use(mod/a)
     ns_a = attr(a, 'namespace')
     # First, ensure this is run in the right environment:
-    expect_identical(get0('modname', envir = ns_a, inherits = FALSE), 'a')
-    expect_identical(get0('T', envir = ns_a), TRUE)
-    expect_identical(get0('t.test', envir = ns_a), NULL)
+    expect_equal(get0('modname', envir = ns_a, inherits = FALSE), 'a')
+    expect_true(get0('T', envir = ns_a))
+    expect_null(get0('t.test', envir = ns_a))
+    expect_not_null(get0('t.test', envir = .GlobalEnv))
 })
 
 test_that('partial name causes error', {
@@ -120,4 +127,87 @@ test_that('nested module can use parent', {
     box::use(mod/b/b)
     expect_true(exists('z', b))
     expect_equal(b$z, 1)
+})
+
+test_that('using legacy functions raises warning', {
+    on.exit({
+        box::unload(library)
+        box::unload(require)
+        box::unload(source)
+    })
+
+    expect_warning(box::use(mod/legacy/library), '.+library.+ inside a module')
+    expect_warning(box::use(mod/legacy/require), '.+require.+ inside a module')
+
+    expect_false(exists('source_test', envir = .GlobalEnv))
+    on.exit(rm(source_test, envir = .GlobalEnv))
+    expect_warning(box::use(mod/legacy/source), '.+source.+ inside a module')
+    expect_true(exists('source_test', envir = .GlobalEnv))
+})
+
+test_that('legacy function warning can be silenced', {
+    old_opts = options(box.warn.legacy = FALSE)
+    box:::set_import_env_parent()
+    on.exit({
+        options(old_opts)
+        box:::set_import_env_parent()
+    })
+
+    expect_warning(box::use(mod/legacy/library), NA)
+    expect_warning(box::use(mod/legacy/require), NA)
+
+    expect_false(exists('source_test', envir = .GlobalEnv))
+    on.exit(rm(source_test, envir = .GlobalEnv), add = TRUE)
+    expect_warning(box::use(mod/legacy/source), NA)
+    expect_true(exists('source_test', envir = .GlobalEnv))
+})
+
+test_that('r/core can be imported', {
+    # All the test case logic is inside the `core_test` module.
+    box::use(mod/core_test)
+
+    # Ensure tests were actually run:
+    expect_gt(core_test$tests_run, 0L)
+})
+
+test_that('modules can be imported and exported by different local names', {
+    expect_error(box::use(mod/issue211), NA)
+})
+
+test_that('legacy modules export all names', {
+    is_legacy = function (mod) {
+        box:::namespace_info(attr(mod, 'namespace'), 'legacy', default = FALSE)
+    }
+
+    box::use(
+        mod/a,
+        mod/legacy,
+        mod/no_exports
+    )
+
+    expect_false(is_legacy(a))
+    expect_true(is_legacy(legacy))
+    expect_false(is_legacy(no_exports))
+
+    expect_setequal(ls(legacy), c('a', 'b'))
+    expect_setequal(ls(no_exports), character())
+})
+
+test_that('modules can specify explicit exports', {
+    box::use(ex = mod/explicit_exports)
+    expect_setequal(ls(ex), c('a', 'double', 'modname'))
+    expect_identical(ex$double, attr(ex, 'namespace')$double)
+    expect_equal(ex$modname, ex$a$modname)
+})
+
+test_that('legcay modules do not call hooks', {
+    # Ensure module is first unloaded:
+    box::use(mod/legacy)
+    box::unload(legacy)
+
+    expect_messages(
+        box::use(mod/legacy),
+        has = 'legacy module loaded',
+        has_not = '\\.on_load is not called'
+    )
 })

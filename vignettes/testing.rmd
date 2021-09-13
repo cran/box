@@ -12,18 +12,6 @@ vignette: >
     %\VignetteIndexEntry{Testing modules}
     %\VignetteEncoding{UTF-8}
 ---
----
-author: Konrad Rudolph
-date: 2021-04-22
-output:
-  md_document:
-    variant: gfm
-  rmarkdown::html_vignette:
-    toc: true
-title: Testing modules
-vignette: |
-  % % %
----
 
 ## Testing is crucial
 
@@ -102,6 +90,8 @@ box::use(testthat[...])
 .on_load = function (ns) {
     test_dir(box::file())
 }
+
+box::export()
 ```
 
 This first loads and attaches the ‘testthat’ package. Although attaching

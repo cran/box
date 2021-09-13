@@ -77,3 +77,9 @@ test_that('Forwarded S3 genetics without methods work', {
 test_that('`is_S3_user_generic` can deal with substituted functions', {
     expect_error(box::use(mod/issue125), regexp = NA)
 })
+
+test_that('nested functions are parsed correctly', {
+    expect_error(box::use(mod/issue203), NA)
+    expect_false(box:::is_S3_user_generic('g', issue203))
+    expect_false(box:::is_S3_user_generic('h', issue203))
+})

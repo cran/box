@@ -3,8 +3,24 @@
 #' \code{box::use} imports one or more modules and/or packages, and makes them
 #' available in the calling environment.
 #'
+#' @usage \special{box::use(prefix/mod, \dots)}
+#' @usage \special{box::use(pkg, \dots)}
+#' @usage \special{box::use(alias = prefix/mod, \dots)}
+#' @usage \special{box::use(alias = pkg, \dots)}
+#' @usage \special{box::use(prefix/mod[attach_list], \dots)}
+#' @usage \special{box::use(pkg[attach_list], \dots)}
+#'
+#' @param prefix/mod a qualified module name
+#' @param pkg a package name
+#' @param alias an alias name
+#' @param attach_list a list of names to attached, optionally witha aliases of
+#' the form \code{alias = name}; or the special placeholder name \code{\dots}
+#' @param \dots further import declarations
+#' @return \code{box::use} has no return value. It is called for its
+#' side effect.
+#'
 #' @details
-#' \code{box::use(...)} specifies a list of one or more import declarations,
+#' \code{box::use(\dots)} specifies a list of one or more import declarations,
 #' given as individual arguments to \code{box::use}, separated by comma. Each
 #' import declaration takes one of the following forms:
 #'
@@ -36,13 +52,13 @@
 #'
 #'      The \code{\var{attach_list}} is a comma-separated list of names,
 #'      optionally with aliases assigned via \code{alias = name}. The list can
-#'      also contain the special symbol \code{...}, which causes \emph{all}
+#'      also contain the special symbol \code{\dots}, which causes \emph{all}
 #'      exported names of the module/package to be imported.
 #' }
 #' }
 #'
-#' See the vignette at \code{vignette('box')} for detailed examples of the
-#' different types of use declarations listed above.
+#' See the vignette at \code{vignette('box', 'box')} for detailed examples of
+#' the different types of use declarations listed above.
 #'
 #' @section Import semantics:
 #' Modules and packages are loaded into dedicated namespace environments. Names
@@ -60,7 +76,27 @@
 #' Member access of (non-attached) exported names of modules and packages
 #' happens via the \code{$} operator. This operator does not perform partial
 #' argument matching, in contrast with the behavior of the \code{$} operator in
-#' base R, which matches partial names.
+#' base \R, which matches partial names.
+#'
+#' @section Export specification:
+#'
+#' Names defined in modules can be marked as \emph{exported} by prefixing them
+#' with an \code{@export} tag comment; that is, the name needs to be immediately
+#' prefixed by a comment that reads, verbatim, \code{#' @export}. That line may
+#' optionally be part of a \pkg{roxygen2} documentation for that name.
+#'
+#' Alternatively, exports may be specified via the
+#' \code{\link[=export]{box::export}} function, but using declarative
+#' \code{@export} tags is generally preferred.
+#'
+#' A module which has not declared any exports is treated as a \emph{legacy
+#' module} and exports \emph{all} default-visible names (that is, all names that
+#' do not start with a dot (\code{.}). This usage is present only for backwards
+#' compatibility with plain \R scripts, and its usage is \emph{not recommended}
+#' when writing new modules.
+#'
+#' To define a module that exports no names, call \code{box::export()} without
+#' arguments. This prevents the module from being treated as a legacy module.
 #'
 #' @section Search path:
 #' Modules are searched in the module search path, given by
@@ -70,6 +106,13 @@
 #' current directory and in a module search path, the local file \file{./a/b.r}
 #' will \emph{not} be loaded, unless the import is explicitly declared as
 #' \code{box::use(./a/b)}.
+#'
+#' Modules in the module search path \emph{must be organised in subfolders}, and
+#' must be imported fully qualified. Keep in mind that \code{box::use(name)}
+#' will \emph{never} attempt to load a module; it always attempts to load a
+#' package. A common module organisation is by project, company or user name;
+#' for instance, fully qualified module names could mirror repository names on
+#' source code sharing websites (such as GitHub).
 #'
 #' Given a declaration \code{box::use(a/b)} and a search path \file{\var{p}}, if
 #' the file \file{\var{p}/a/b.r} does not exist, \pkg{box} alternatively looks
@@ -84,11 +127,11 @@
 #' \code{:} on most other platforms).
 #'
 #' The \emph{current directory} is context-dependent: inside a module, the
-#' directory corresponds to the module’s directory. Inside an R code file
+#' directory corresponds to the module’s directory. Inside an \R code file
 #' invoked from the command line, it corresponds to the directory containing
 #' that file. If the code is running inside a \pkg{Shiny} application or a
 #' \pkg{knitr} document, the directory of the execution is used. Otherwise (e.g.
-#' in an interactive R session), the current working directory as given by
+#' in an interactive \R session), the current working directory as given by
 #' \code{getwd()} is used.
 #'
 #' Local import declarations (that is, module prefixes that start with \code{./}
@@ -100,13 +143,13 @@
 #' @section S3 support:
 #' Modules can contain S3 generics and methods. To override known generics
 #' (= those defined outside the module), methods inside a module need to be
-#' registered using \code{\link{register_S3_method}}. See the documentation
-#' there for details.
+#' registered using \code{\link[=register_S3_method]{box::register_S3_method}}.
+#' See the documentation there for details.
 #'
 #' @section Module names:
-#' A module’s full name consists of one or more R names separated by \code{/}.
-#' Since \code{box::use} declarations contain R expressions, the names need to
-#' be valid R names. Non-syntactic names need to be wrapped in backticks; see
+#' A module’s full name consists of one or more \R names separated by \code{/}.
+#' Since \code{box::use} declarations contain \R expressions, the names need to
+#' be valid \R names. Non-syntactic names need to be wrapped in backticks; see
 #' \link[base]{Quotes}.
 #'
 #' Furthermore, since module names usually correspond to file or folder names,
@@ -114,11 +157,6 @@
 #'
 #' @section Encoding:
 #' All module source code files are assumed to be UTF-8 encoded.
-#'
-#' @param ... one or more module import declarations, see \sQuote{Details} for a
-#' description of the format.
-#' @return \code{box::use} has no return value. It is called for its
-#' side-effect.
 #'
 #' @examples
 #' local({
@@ -148,19 +186,21 @@
 #'     bye('Eve')
 #' })
 #' @seealso
-#' \code{\link{name}} and \code{\link{file}} give information about loaded
-#' modules.
-#' \code{\link{help}} displays help for a module’s exported names.
-#' \code{\link{unload}} and \code{\link{reload}} aid during module development
-#' by performing dynamic unloading and reloading of modules in a running R
-#' session.
+#' \code{\link[=name]{box::name}} and \code{\link[=file]{box::file}} give
+#' information about loaded modules.
+#' \code{\link[=help]{box::help}} displays help for a module’s exported names.
+#' \code{\link[=unload]{box::unload}} and \code{\link[=reload]{box::reload}} aid
+#' during module development by performing dynamic unloading and reloading of
+#' modules in a running \R session.
+#' \code{\link[=export]{box::export}} can be used inside a module to declare
+#' module exports.
 #' @export
 use = function (...) {
     caller = parent.frame()
     call = match.call()
     imports = call[-1L]
     aliases = names(imports) %||% character(length(imports))
-    map(use_one, imports, aliases, list(caller))
+    map(use_one, imports, aliases, list(caller), use_call = list(sys.call()))
     invisible()
 }
 
@@ -214,6 +254,7 @@ use = function (...) {
 #' surrounding \code{use} call
 #' @param alias the use alias, if given, otherwise \code{NULL}
 #' @param caller the client’s calling environment (parent frame)
+#' @param use_call the \code{use} call which is invoking this code
 #' @return \code{use_one} does not currently return a value. — This might change
 #' in the future.
 #' @note If a module is still being loaded (because it is part of a cyclic
@@ -222,12 +263,15 @@ use = function (...) {
 #' its names are available yet.
 #' @keywords internal
 #' @name importing
-use_one = function (declaration, alias, caller) {
+use_one = function (declaration, alias, caller, use_call) {
     # Permit empty expression resulting from trailing comma.
     if (identical(declaration, quote(expr =)) && identical(alias, '')) return()
-    spec = parse_spec(declaration, alias)
-    info = rethrow_on_error(find_mod(spec, caller), sys.call(-1L))
-    load_and_register(spec, info, caller)
+
+    rethrow_on_error({
+        spec = parse_spec(declaration, alias)
+        info = find_mod(spec, caller)
+        load_and_register(spec, info, caller)
+    }, call = use_call)
 }
 
 #' @param spec a module use declaration specification
@@ -257,9 +301,9 @@ register_as_import = function (spec, info, mod_ns, caller) {
     if (is_namespace(caller)) {
         # Import declarations are stored in a list in the module metadata
         # dictionary. They are looked up by their spec.
-        import_decl = structure(mod_ns, spec = spec, info = info)
+        import = import_decl(ns = mod_ns, spec = spec, info = info)
         existing_imports = namespace_info(caller, 'imports', list())
-        namespace_info(caller, 'imports') = c(existing_imports, import_decl)
+        namespace_info(caller, 'imports') = c(existing_imports, list(import))
     }
 }
 
@@ -307,7 +351,14 @@ load_from_source = function (info, mod_ns) {
     # http://stackoverflow.com/q/5031630/1968 for a discussion of this.
     exprs = parse(info$source_path, keep.source = TRUE, encoding = 'UTF-8')
     eval(exprs, mod_ns)
-    namespace_info(mod_ns, 'exports') = parse_export_specs(info, exprs, mod_ns)
+
+    if (is.null(namespace_info(mod_ns, 'exports'))) {
+        exports = parse_export_specs(info, exprs, mod_ns)
+        is_legacy = length(exports) == 0L
+        namespace_info(mod_ns, 'legacy') = is_legacy
+        namespace_info(mod_ns, 'exports') = if (is_legacy) ls(mod_ns) else exports
+    }
+
     make_S3_methods_known(mod_ns)
 }
 
@@ -390,13 +441,12 @@ attach_list = function (spec, exports) {
     is_wildcard = is.na(spec$attach)
     name_spec = spec$attach[! is_wildcard]
 
-    if (! all(is_wildcard) && any((missing = ! name_spec %in% exports))) {
-        stop(sprintf(
-            'Name%s %s not exported by %s',
-            if (length(name_spec[missing]) > 1L) 's' else '',
-            paste(dQuote(name_spec[missing]), collapse = ', '),
-            spec_name(spec)
-        ))
+    if (! all(is_wildcard) && any((what = ! name_spec %in% exports))) {
+        missing = name_spec[what]
+        throw(
+            'name{s} {missing;"} not exported by {spec_name(spec);"}',
+            s = if (length(missing) > 1L) 's' else ''
+        )
     }
 
     if (any(is_wildcard)) {

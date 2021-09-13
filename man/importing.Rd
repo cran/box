@@ -18,7 +18,7 @@
 \alias{assign_temp_alias}
 \title{Import a module or package}
 \usage{
-use_one(declaration, alias, caller)
+use_one(declaration, alias, caller, use_call)
 
 load_and_register(spec, info, caller)
 
@@ -53,6 +53,8 @@ surrounding \code{use} call}
 \item{alias}{the use alias, if given, otherwise \code{NULL}}
 
 \item{caller}{the client’s calling environment (parent frame)}
+
+\item{use_call}{the \code{use} call which is invoking this code}
 
 \item{spec}{a module use declaration specification}
 
