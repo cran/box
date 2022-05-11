@@ -12,7 +12,7 @@
 
 <meta name="author" content="Konrad Rudolph" />
 
-<meta name="date" content="2022-04-23" />
+<meta name="date" content="2022-05-11" />
 
 <title>Using compiled code</title>
 
@@ -40,6 +40,101 @@ document.addEventListener('DOMContentLoaded', function(e) {
     </style>
 
 
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -238,11 +333,130 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Using compiled code</h1>
 <h4 class="author">Konrad Rudolph</h4>
-<h4 class="date">2022-04-23</h4>
+<h4 class="date">2022-05-11</h4>
 
 
+<div id="TOC">
+<ul>
+<li><a href="#current-status">Current status</a></li>
+<li><a href="#example">Example</a></li>
+<li><a href="#compile-code">Compile code</a></li>
+<li><a href="#loading-compiled-code">Loading compiled code</a></li>
+<li><a href="#interacting-with-compiled-code">Interacting with compiled
+code</a></li>
+</ul>
+</div>
 
-
+<div id="current-status" class="section level2">
+<h2>Current status</h2>
+<p>The ‘box’ package doesn’t have a built-in foreign function interface
+yet but it is possible to integrate compiled code via R’s
+<code>SHLIB</code> mechanism for building shared libraries. In
+particular, this also works with packages such as <a href="https://cran.r-project.org/package=Rcpp">Rcpp</a>.</p>
+<p>For the time being, the following steps unfortunately require manual
+work:</p>
+<ol style="list-style-type: decimal">
+<li>Compile code when a module is installed or loaded for the first
+time.</li>
+<li>Load the compiled shared library when a module is loaded.</li>
+<li>Interface with compiled code via function calls.</li>
+</ol>
+<p>This guide aims to describe all steps in sufficient detail to make
+them easy. In the long run, the plan is to automate all these steps.</p>
+</div>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>To demonstrate these steps, we will use an example module named
+<code>c</code> that uses compiled code written in C. Here is the C code
+that we want to make usable in an R module, which is saved in the file
+<code>c/hello.c</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;R.h&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;Rdefines.h&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>SEXP hello_world<span class="op">(</span>SEXP name<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="dt">const</span> msg_template<span class="op">[]</span> <span class="op">=</span> <span class="st">&quot;Hello from C, %s!&quot;</span><span class="op">;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="dt">const</span> <span class="op">*</span><span class="dt">const</span> c_name <span class="op">=</span> CHAR<span class="op">(</span>asChar<span class="op">(</span>name<span class="op">));</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span><span class="dt">const</span> msg_buf <span class="op">=</span> R_alloc<span class="op">(</span><span class="kw">sizeof</span> msg_template <span class="op">-</span> <span class="dv">2</span> <span class="op">+</span> strlen<span class="op">(</span>c_name<span class="op">)</span> <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    sprintf<span class="op">(</span>msg_buf<span class="op">,</span> msg_template<span class="op">,</span> c_name<span class="op">);</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> mkString<span class="op">(</span>msg_buf<span class="op">);</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In addition, compiled code often includes specific compilation
+instructions. While this is unnecessary for this simple example, it’s
+included anyway for completeness. For R, these compilation instructions
+are contained in a file called <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Using-Makevars"><code>Makevars</code></a>:</p>
+<pre class="c/makevars"><code>PKG_CFLAGS = -std=c11 -pedantic -Wall -Wextra -Werror</code></pre>
+</div>
+<div id="compile-code" class="section level2">
+<h2>Compile code</h2>
+<p>To make code loadable and callable by R, it should be compiled via
+the <code>R CMD SHLIB</code> mechanism. This only needs to happen
+<em>once</em> for each module, when it is first loaded. By convention,
+such code should go into a submodule called <code>__setup__</code>. This
+convention makes it clear that this is a “special” module, and not
+intended for direct consumption of the module user.</p>
+<p>The module specifies which object files to compile, and invokes
+<code>R CMD SHLIB</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>build_shared_lib <span class="ot">=</span> <span class="cf">function</span> (object_names) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Change working directory so R finds the Makevars.</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    old_dir <span class="ot">=</span> <span class="fu">setwd</span>(box<span class="sc">::</span><span class="fu">file</span>())</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">on.exit</span>(<span class="fu">setwd</span>(old_dir))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    exitcode <span class="ot">=</span> <span class="fu">system2</span>(<span class="st">&#39;R&#39;</span>, <span class="fu">c</span>(<span class="st">&#39;CMD&#39;</span>, <span class="st">&#39;SHLIB&#39;</span>, <span class="fu">paste0</span>(object_names, <span class="st">&#39;.c&#39;</span>)))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stopifnot</span>(exitcode <span class="sc">==</span> 0L)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">build_shared_lib</span>(<span class="st">&#39;hello&#39;</span>)</span></code></pre></div>
+<p>In principle, only the last line in this file should need to be
+changed for other C projects.</p>
+<p>With this in place, we can invoke the compilation by loading the
+<code>c/__setup__</code> submodule:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>c<span class="sc">/</span><span class="st">`</span><span class="at">__setup__</span><span class="st">`</span>)</span></code></pre></div>
+<p>The result of the compilation will be a single file,
+<code>hello.so</code> (on Unix and macOS) or <code>hello.dll</code> (on
+Windows) which represents a <em>shared library file</em>, and which we
+can load and use inside R.</p>
+</div>
+<div id="loading-compiled-code" class="section level2">
+<h2>Loading compiled code</h2>
+<p>Compiled code from a shared library is loaded in R using the
+<code>dyn.load</code> command. This will happen inside the module that
+uses and/or exposes the compiled code.</p>
+<p>Since the name of the shared library file is platform dependent, we
+need a helper function that gives us this name:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>libname <span class="ot">=</span> <span class="cf">function</span> (name) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    box<span class="sc">::</span><span class="fu">file</span>(<span class="fu">paste0</span>(name, .Platform<span class="sc">$</span>dynlib.ext))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Now our module can load the compiled code; since this code needs to
+be executed every time the module is loaded, it goes into the
+<code>.on_load</code> hook:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>.on_load <span class="ot">=</span> <span class="cf">function</span> (ns) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ns<span class="sc">$</span>dll <span class="ot">=</span> <span class="fu">dyn.load</span>(<span class="fu">libname</span>(<span class="st">&#39;hello&#39;</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>… and don’t forget to unload the dynamic library when the module is
+unloaded:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>.on_unload <span class="ot">=</span> <span class="cf">function</span> (ns) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dyn.unload</span>(<span class="fu">libname</span>(<span class="st">&#39;hello&#39;</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="interacting-with-compiled-code" class="section level2">
+<h2>Interacting with compiled code</h2>
+<p>Finally, our module needs a way of calling the compiled code. This is
+done via the R primitive <code>.Call</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>hello_world <span class="ot">=</span> <span class="cf">function</span> (name) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.Call</span>(dll<span class="sc">$</span>hello_world, name)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>To use the code, we load the module and call the
+<code>hello_world</code> function:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>c)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>c<span class="sc">$</span><span class="fu">hello_world</span>(<span class="st">&#39;Rthur&#39;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;Hello from C, Rthur!&quot;</code></pre>
+<p>Note that using <code>dll$hello_world</code> causes a somewhat costly
+call to <code>getNativeSymbolInfo</code> every time the function is
+invoked. If this is undesired, the value of <code>dll$hello_world</code>
+should be stored in a variable when loading the module.</p>
+</div>
 
 
 
