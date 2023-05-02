@@ -74,10 +74,10 @@ name is `` ./`__tests__` ``.
 In this case, the `__tests__` submodule consists of a directory with the
 following contents:
 
--   `__tests__/`
-    -   [`__init__.r`](bio/__tests__/__init__.r)
-    -   [`helper-module.r`](bio/__tests__/helper-module.r)
-    -   individual test files
+- `__tests__/`
+  - [`__init__.r`](bio/__tests__/__init__.r)
+  - [`helper-module.r`](bio/__tests__/helper-module.r)
+  - individual test files
 
 The `__init__.r` file corresponds closely to the file `tests/testthat.R`
 in a standard R package structure. It loads ‘testthat’ and launches the

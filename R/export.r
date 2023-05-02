@@ -90,6 +90,8 @@ parse_export_specs = function (info, exprs, mod_ns) {
     }
 
     reexport_names = function (declaration, alias, export) {
+        # Permit empty expression resulting from trailing comma.
+        if (identical(declaration, quote(expr =)) && identical(alias, '')) return()
         spec = parse_spec(declaration, alias)
         import = find_matching_import(namespace_info(mod_ns, 'imports'), spec)
 
@@ -117,19 +119,19 @@ parse_export_specs = function (info, exprs, mod_ns) {
         }
     }
 
-    block_error = function (export) {
-        throw(
-            'the {"@export";"} tag may only be applied to assignments or ',
-            '{"use";"} declarations;\n',
-            'used incorrectly in line {location}:\n',
-            '    {paste(code, collapse = "\n    ")}',
-            code = deparse(attr(export, 'call'), backtick = TRUE),
-            location = attr(export, 'location')[1L]
-        )
-    }
-
     exports = parse_export_tags(info, exprs, mod_ns)
     unique(flatmap_chr(parse_export, exports))
+}
+
+block_error = function (export) {
+    throw(
+        'the {"@export";"} tag may only be applied to assignments or ',
+        '{"use";"} declarations;\n',
+        'used incorrectly in line {location}:\n',
+        '    {paste(code, collapse = "\n    ")}',
+        code = deparse(attr(export, 'call'), backtick = TRUE),
+        location = attr(export, 'location')[1L]
+    )
 }
 
 #' @keywords internal
@@ -251,7 +253,7 @@ parse_object = function (info, expr, mod_ns) {
                     }
 
                     obj = if (bindingIsActive(name, mod_ns)) {
-                        roxygen2_object(name, active_binding_function(name, mod_ns), 'active')
+                        roxygen2_object(name, activeBindingFunction(name, mod_ns), 'active')
                     } else {
                         value = get(name, mod_ns)
                         if (is.function(value)) {
@@ -309,14 +311,16 @@ add_comments = function (refs) {
 #' tag, \code{FALSE} otherwise.
 #' @keywords internal
 has_export_tag = function (ref) {
+    self = environment()
+
     next_char = function () {
-        pos <<- pos + 1L
+        self$pos = pos + 1L
         substr(line, pos, pos)
     }
 
     consume_char = function (chars) {
         matched = next_char() %in% chars
-        if (! matched) pos <<- pos - 1L
+        if (! matched) self$pos = pos - 1L
         matched
     }
 
@@ -334,7 +338,7 @@ has_export_tag = function (ref) {
         if (! consume_char('#')) return(FALSE)
         consume_chars('#')
         if (! consume_char("'")) {
-            pos <<- prev
+            self$pos = prev
             return(FALSE)
         }
         consume_whitespace()
@@ -347,7 +351,7 @@ has_export_tag = function (ref) {
     }
 
     is_export = function () {
-        pos <<- pos + 1L
+        self$pos = pos + 1L
         len = nchar('@export')
         substr(line, pos, pos + len) == '@export' &&
             (pos + len > nchar(line) || substr(line, pos + len, pos + len) %in% c(' ', '\t'))

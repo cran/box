@@ -6,7 +6,7 @@
 \alias{calling_mod_path}
 \alias{split_path}
 \alias{merge_path}
-\alias{sanitize_path}
+\alias{sanitize_path_fragment}
 \title{Path related functions}
 \usage{
 mod_search_path(caller)
@@ -17,12 +17,12 @@ split_path(path)
 
 merge_path(components)
 
-sanitize_path(path)
+sanitize_path_fragment(path)
 }
 \arguments{
 \item{caller}{the environment from which \code{box::use} was invoked.}
 
-\item{path}{the path to split}
+\item{path}{the path}
 
 \item{components}{character string vector of path components to merge}
 }

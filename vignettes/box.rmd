@@ -66,7 +66,7 @@ ls(seq)
     ## [1] "is_valid" "revcomp"  "seq"      "table"
 
 It appears that `seq` exports 4 different names. To access exported
-names, we use the `$` operator: <code>seq$is_valid</code> allows us to
+names, we use the `$` operator: <code>seq\$is_valid</code> allows us to
 use the first function in the list of exported names. We can also
 display the interactive help for individual names using the `box::help`
 function, e.g.:
@@ -112,18 +112,18 @@ getS3method('print', 'bio/seq')
 ```
 
     ## function (x) {
-    ##     box::use(stringr[str_trunc])
+    ##     box::use(stringr[trunc = str_trunc])
     ## 
     ##     if (is.null(names(x))) names(x) = paste('seq', seq_along(x))
     ## 
     ##     cat(
     ##         sprintf('%d DNA sequence%s:\n', length(x), if (length(x) == 1L) '' else 's'),
-    ##         sprintf('  >%s\n  %s\n', names(x), str_trunc(x, 30L)),
+    ##         sprintf('  >%s\n  %s\n', names(x), trunc(x, 30L)),
     ##         sep = ''
     ##     )
     ##     invisible(x)
     ## }
-    ## <environment: 0x7fa5beb20630>
+    ## <environment: 0x122f66140>
 
 The source code for `print.bio/seq` contains an interesting `use`
 declaration. It show-cases an alternative way of invoking `box::use`,
@@ -158,7 +158,7 @@ In this example we set the search path to the current working directory
 but in normal usage it would be a global library location,
 e.g. (following the [XDG base directory
 specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html))
-`~/.local/R/modules` on Linux.
+`~/.local/share/R/modules` on Linux.
 
 **Note** that non-local module names *must* be fully qualified, nested
 modules: `box::use(foo/bar)` works, `box::use(bar)` does not (instead,
@@ -200,11 +200,10 @@ distinction between local and global scope:
 search()
 ```
 
-    ##  [1] ".GlobalEnv"        "mod:bio/seq"       "mod:./source_file"
-    ##  [4] "devtools_shims"    "package:testthat"  "package:stats"    
-    ##  [7] "package:graphics"  "package:grDevices" "package:utils"    
-    ## [10] "package:datasets"  "renv:shims"        "package:methods"  
-    ## [13] "Autoloads"         "package:base"
+    ##  [1] ".GlobalEnv"        "mod:bio/seq"       "package:stats"    
+    ##  [4] "package:graphics"  "package:grDevices" "package:utils"    
+    ##  [7] "package:datasets"  "renv:shims"        "package:methods"  
+    ## [10] "Autoloads"         "package:base"
 
 Note the second item, which reads “<code>mod:bio/seq</code>”. But let’s
 now undo that, to attach (and use) the module locally instead:
@@ -238,11 +237,10 @@ different output). And note that the `seq` module’s `table` function is
 search()
 ```
 
-    ##  [1] ".GlobalEnv"        "mod:./source_file" "devtools_shims"   
-    ##  [4] "package:testthat"  "package:stats"     "package:graphics" 
-    ##  [7] "package:grDevices" "package:utils"     "package:datasets" 
-    ## [10] "renv:shims"        "package:methods"   "Autoloads"        
-    ## [13] "package:base"
+    ##  [1] ".GlobalEnv"        "package:stats"     "package:graphics" 
+    ##  [4] "package:grDevices" "package:utils"     "package:datasets" 
+    ##  [7] "renv:shims"        "package:methods"   "Autoloads"        
+    ## [10] "package:base"
 
 ```{r eval = FALSE}
 table(s)
@@ -265,30 +263,30 @@ referring to.
 
 The module `bio/seq`, which we have used in the previous section, is
 implemented in the file [`bio/seq.r`](bio/seq.r). The file `seq.r` is,
-by and large, a normal R source file, which happens to live in a
+by and large, a regular R source file, which happens to live in a
 directory named `bio`.
 
 In fact, there are only three things worth mentioning:
 
-1.  Documentation. Functions in the module file can be documented using
+1.  Documentation: functions in the module file can be documented using
     ‘[roxygen2](https://cran.r-project.org/package=roxygen2)’ syntax. It
     works the same as for packages. The ‘box’ package parses the
     documentation and makes it available via `box::help`. *Displaying
     module help requires that ‘roxygen2’ is installed.*
 
-2.  Export declarations. Similar to packages, modules explicitly need to
+2.  Export declarations: similar to packages, modules explicitly need to
     declare which names they export; they do this using the annotation
-    comment `#'    @export` in front of the name. Again, this works
-    similarly to ‘roxygen2’ (but does *not* require having that package
-    installed).
+    comment `#' @export` in front of the name assignment. Again, this
+    works similarly to ‘roxygen2’ (but does *not* require having that
+    package installed).
 
-3.  The module exports [S3 functions](https://adv-r.hadley.nz/s3.html).
-    The ‘box’ package takes care to register such functions
-    automatically but this only works for *user generics* that are
-    defined inside the same module. When overriding “known generics”
-    (such as `print`), we need to register these manually via
-    `register_S3_method` (this is necessary since these functions are
-    inherently ambiguous and there is no automatic way of finding them).
+3.  [S3 functions](https://adv-r.hadley.nz/s3.html): ‘box’ registers and
+    exports such functions automatically as necessary, but this only
+    works for *user generics* that are defined inside the same module.
+    When overriding “known generics” (such as `print`), we need to
+    register these manually via `register_S3_method` (this is necessary
+    since these functions are inherently ambiguous and there is no
+    automatic way of finding them).
 
 ## Nesting modules
 
@@ -307,7 +305,14 @@ provided relative path prevents lookup in the import search path (that
 we set via `options(box.path = …)`); instead, only the current directory
 (that is, the directory containing the `bio` module) is considered.
 
-We can now use the `bio` module:
+When applied to a `box::use` declaration, `@export` causes all names
+which are imported by that declaration to also be exported: any module
+name created by the declaration (here, `seq`) is exported as-is.
+Furthermore, any attached name is likewise exported. Refer to the
+`box::use` documentation and examples for more details on which names
+are exported.
+
+Coming back to our example module, we can now use the `bio` module:
 
 ```{r eval = FALSE}
 options(box.path = NULL) # Reset search path

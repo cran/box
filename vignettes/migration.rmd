@@ -290,27 +290,27 @@ For instance, consider the following (nonsensical) working, circular
 definition of the functions `even` and `odd`, which determine whether a
 non-negative integer is even or odd:
 
--   `even.r`:
+- `even.r`:
 
-    ``` r
-    box::use(./odd[...])
+  ``` r
+  box::use(./odd[...])
 
-    #' @export
-    even = function (n) {
-        n == 0L || ! odd(n)
-    }
-    ```
+  #' @export
+  even = function (n) {
+      n == 0L || ! odd(n)
+  }
+  ```
 
--   `odd.r`:
+- `odd.r`:
 
-    ``` r
-    box::use(./even[...])
+  ``` r
+  box::use(./even[...])
 
-    #' @export
-    odd = function (n) {
-        n != 0L && even(n - 1L)
-    }
-    ```
+  #' @export
+  odd = function (n) {
+      n != 0L && even(n - 1L)
+  }
+  ```
 
 These modules compute `even` in terms of `odd`, and vice-versa. Yet
 ‘box’ has no trouble importing and using both these modules. However,
@@ -318,14 +318,14 @@ this no longer works once we attempt to export imported submodules
 themselves. That is, the following version of `odd.r` would cause an
 error:
 
--   `odd.r`:
+- `odd.r`:
 
-    ``` r
-    #' @export
-    box::use(./even[...])
+  ``` r
+  #' @export
+  box::use(./even[...])
 
-    #' @export
-    odd = function (n) {
-        n != 0L && even(n - 1L)
-    }
-    ```
+  #' @export
+  odd = function (n) {
+      n != 0L && even(n - 1L)
+  }
+  ```

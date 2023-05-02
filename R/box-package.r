@@ -28,27 +28,71 @@
 #'
 #' \itemize{
 #'  \item \code{\link[=help]{box::help}}
-#'  \item \code{\link[=unload]{box::unload}}, \code{\link[=reload]{box::reload}}
+#'  \item \code{\link[=unload]{box::unload}},
+#'      \code{\link[=reload]{box::reload}},
+#'      \code{\link[=unload]{box::purge_cache}}
 #'  \item \code{\link[=set_script_path]{box::set_script_path}}
-#'  \item \code{\link[=script_path]{box::script_path}}
+#'  \item \code{\link[=script_path]{box::script_path}},
+#'      \code{\link[=script_path]{box::set_script_path}}
 #' }
 #'
 #' @useDynLib box, .registration = TRUE
 #' @name box
 #' @docType package
+#' @keywords internal
 '_PACKAGE'
 
-called_from_devtools = function () {
-    isNamespaceLoaded('devtools') && {
-        is_devtools_ns = function (x) identical(x, getNamespace('devtools'))
-        any(map_lgl(is_devtools_ns, lapply(sys.frames(), topenv)))
+.onLoad = function (libname, pkgname) {
+    ns = base::topenv()
+    ns$system_mod_path = system.file('mod', package = pkgname)
+
+    set_import_env_parent()
+}
+
+.onUnload = function (libpath) {
+    purge_cache()
+}
+
+.onAttach = function (libname, pkgname) {
+    # Do not permit attaching ‘box’, except during build/check/CI.
+    if (
+        called_from_devtools()
+        || called_from_pkgdown()
+        || called_from_ci()
+        # `utils::example` also attaches the package.
+        || called_from_example()
+    ) return()
+
+    is_bad_call = function (call) {
+        as.character(call[[1L]]) %in% c('library', 'require')
     }
+
+    # `unname` prevents the name from being displayed as `c(name = "box")`.
+    pkgname = unname(pkgname)
+    # Deparsed to silence spurious `R CMD check` warning.
+    default = call('library', as.name(pkgname))
+    bad_call = Filter(is_bad_call, sys.calls())[1L][[1L]] %||% default
+    throw(
+        'the {pkgname;\'} package is not supposed to be attached!\n\n',
+        'Please consult the user guide at `{vignette}`.',
+        vignette = call('vignette', pkgname, package = pkgname),
+        call = bad_call,
+        subclass = 'box_attach_error'
+    )
+}
+
+called_from_devtools = function () {
+    is_devtools_ns = function (x) identical(x, getNamespace('devtools'))
+
+    isNamespaceLoaded('devtools') &&
+        ! nzchar(Sys.getenv('R_BOX_TEST_ALLOW_DEVTOOLS')) &&
+        any(map_lgl(is_devtools_ns, lapply(sys.frames(), base::topenv)))
 }
 
 called_from_pkgdown = function () {
     isNamespaceLoaded('pkgdown') && {
         is_pkgdown_ns = function (x) identical(x, getNamespace('pkgdown'))
-        any(map_lgl(is_pkgdown_ns, lapply(sys.frames(), topenv)))
+        any(map_lgl(is_pkgdown_ns, lapply(sys.frames(), base::topenv)))
     }
 }
 
@@ -68,44 +112,8 @@ called_from_example = function () {
     # etc.
     is_example_call = function (i)
         identical(sys.call(i)[[1L]], example) &&
-            identical(topenv(sys.frame(i)), utils_ns)
+            identical(base::topenv(sys.frame(i)), utils_ns)
     any(map_lgl(is_example_call, seq_len(sys.nframe())))
-}
-
-.onAttach = function (libname, pkgname) {
-    # Do not permit attaching ‘box’, except during build/check/CI.
-    if (
-        called_from_devtools() ||
-        called_from_pkgdown() ||
-        called_from_ci() ||
-        # `utils::example` also attaches the package.
-        called_from_example()
-    ) return()
-
-    is_bad_call = function (call) {
-        as.character(call[[1L]]) %in% c('library', 'require')
-    }
-
-    # Deparsed to silence spurious `R CMD check` warnign
-    default = call('library', quote(box))
-    bad_call = Filter(is_bad_call, sys.calls())[1L][[1L]] %||% default
-    throw(
-        'the {pkgname;\'} package is not supposed to be attached!\n\n',
-        'Please consult the user guide at `{vignette}`.',
-        vignette = call('vignette', pkgname, package = pkgname),
-        call = bad_call,
-        subclass = 'box_attach_error'
-    )
-}
-
-.onLoad = function (libname, pkgname) {
-    assign(
-        'system_mod_path',
-        system.file('mod', package = 'box'),
-        envir = topenv()
-    )
-
-    set_import_env_parent()
 }
 
 import_env_parent = NULL
@@ -120,10 +128,4 @@ set_import_env_parent = function () {
             baseenv()
         }
     )
-}
-
-.onUnload = function (libpath) {
-    eapply(loaded_mods, function (mod_ns) {
-        call_hook(mod_ns, '.on_unload', mod_ns)
-    }, all.names = TRUE)
 }

@@ -6,8 +6,12 @@ source_file = function (path, language) {
     sprintf('```%s\n%s\n```', language, code)
 }
 
-knitr::knit_hooks$set(file = function (before, options, envir) {
-    if (! before) {
-        source_file(options$file, options$lang)
-    }
-})
+.on_load = function (ns) {
+    knitr::knit_hooks$set(box_file = function (before, options, envir) {
+        if (! before) {
+            source_file(options$box_file, options$box_lang)
+        }
+    })
+}
+
+box::export()

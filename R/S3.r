@@ -7,7 +7,7 @@
 #' @param name the name of the generic as a character string.
 #' @param class the class name.
 #' @param method the method to register.
-#' @return \code{register_S3_method} is called for its side effect.
+#' @return \code{box::register_S3_method} is called for its side effect.
 #'
 #' @details Methods for generics defined in the same module do not need to be
 #' registered explicitly, and indeed \emph{should not} be registered. However,
@@ -62,13 +62,18 @@ is_S3 = function (expr) {
             # the general case (namely, the function body itself could redefine
             # them).
             if (identical(fun, quote(UseMethod))) return(TRUE)
+
             # Make sure nested function definitions are *not* getting
             # traversed: `UseMethod` inside a nested function does not make
             # the containing function a generic.
             if (identical(fun, quote(`function`))) return(FALSE)
-            Recall(as.list(expr)[-1])
+
+            # Without `as.list`, missing arguments in call expressions cause
+            # missing values in our code. Rather than handle these as special
+            # cases, we use `as.list` to flatten those into empty expressions.
+            Recall(as.list(expr)[-1L])
         } else {
-            Recall(fun) || Recall(expr[-1L])
+            Recall(fun) || Recall(as.list(expr)[-1L])
         }
     } else if (is.recursive(expr)) {
         Recall(expr[[1L]]) || Recall(expr[-1L])
@@ -92,8 +97,7 @@ make_S3_methods_known = function (module) {
     functions = lsf(module)
     generics = Filter(function (f) is_S3_user_generic(f, module), functions)
 
-    find_methods = function (generic)
-        grep(sprintf('^%s\\.[^.]', generic), functions, value = TRUE)
+    find_methods = function (generic) grep(fmt('^{generic}\\.[^.]'), functions, value = TRUE)
 
     methods = map(find_methods, generics)
 

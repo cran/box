@@ -38,9 +38,12 @@ Functions for use in interactive sessions and for testing.
 
 \itemize{
  \item \code{\link[=help]{box::help}}
- \item \code{\link[=unload]{box::unload}}, \code{\link[=reload]{box::reload}}
+ \item \code{\link[=unload]{box::unload}},
+     \code{\link[=reload]{box::reload}},
+     \code{\link[=unload]{box::purge_cache}}
  \item \code{\link[=set_script_path]{box::set_script_path}}
- \item \code{\link[=script_path]{box::script_path}}
+ \item \code{\link[=script_path]{box::script_path}},
+     \code{\link[=script_path]{box::set_script_path}}
 }
 }
 
@@ -62,3 +65,4 @@ Other contributors:
 }
 
 }
+\keyword{internal}

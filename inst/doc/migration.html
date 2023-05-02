@@ -12,7 +12,7 @@
 
 <meta name="author" content="Konrad Rudolph" />
 
-<meta name="date" content="2022-05-11" />
+<meta name="date" content="2023-05-01" />
 
 <title>Migration guide</title>
 
@@ -31,22 +31,23 @@ document.addEventListener('DOMContentLoaded', function(e) {
 </script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
@@ -64,55 +65,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -121,13 +121,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -333,32 +340,35 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Migration guide</h1>
 <h4 class="author">Konrad Rudolph</h4>
-<h4 class="date">2022-05-11</h4>
+<h4 class="date">2023-05-01</h4>
 
 
 <div id="TOC">
 <ul>
-<li><a href="#modules-v1.0-box">‘modules’ “v1.0” == ‘box’</a></li>
-<li><a href="#importing-modules-and-packages">Importing modules and
+<li><a href="#modules-v1.0-box" id="toc-modules-v1.0-box">‘modules’
+“v1.0” == ‘box’</a></li>
+<li><a href="#importing-modules-and-packages" id="toc-importing-modules-and-packages">Importing modules and
 packages</a>
 <ul>
-<li><a href="#general-syntax">General syntax</a></li>
-<li><a href="#attaching-names">Attaching names</a></li>
-<li><a href="#loading-documentation">Loading documentation</a></li>
+<li><a href="#general-syntax" id="toc-general-syntax">General
+syntax</a></li>
+<li><a href="#attaching-names" id="toc-attaching-names">Attaching
+names</a></li>
+<li><a href="#loading-documentation" id="toc-loading-documentation">Loading documentation</a></li>
 </ul></li>
-<li><a href="#executing-code-during-module-loading">Executing code
-during module loading</a></li>
-<li><a href="#changed-options">Changed options</a></li>
-<li><a href="#changed-function-names">Changed function names</a></li>
-<li><a href="#exporting-names-from-modules">Exporting names from
+<li><a href="#executing-code-during-module-loading" id="toc-executing-code-during-module-loading">Executing code during
+module loading</a></li>
+<li><a href="#changed-options" id="toc-changed-options">Changed
+options</a></li>
+<li><a href="#changed-function-names" id="toc-changed-function-names">Changed function names</a></li>
+<li><a href="#exporting-names-from-modules" id="toc-exporting-names-from-modules">Exporting names from
 modules</a></li>
-<li><a href="#accessing-default-packages">Accessing default
-packages</a></li>
-<li><a href="#loading-parents-of-nested-modules">Loading parents of
-nested modules</a></li>
-<li><a href="#displaying-documentation">Displaying
-documentation</a></li>
-<li><a href="#cyclic-imports">Cyclic imports</a></li>
+<li><a href="#accessing-default-packages" id="toc-accessing-default-packages">Accessing default packages</a></li>
+<li><a href="#loading-parents-of-nested-modules" id="toc-loading-parents-of-nested-modules">Loading parents of nested
+modules</a></li>
+<li><a href="#displaying-documentation" id="toc-displaying-documentation">Displaying documentation</a></li>
+<li><a href="#cyclic-imports" id="toc-cyclic-imports">Cyclic
+imports</a></li>
 </ul>
 </div>
 
@@ -381,15 +391,15 @@ fixes.</p>
 <h3>General syntax</h3>
 <p>With the ‘modules’ package, modules and packages were imported
 via</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modules)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># …</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>modname <span class="ot">=</span> <span class="fu">import</span>(<span class="st">&#39;prefix/modname&#39;</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>pkgname <span class="ot">=</span> <span class="fu">import_package</span>(<span class="st">&#39;pkgname&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(modules)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># …</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>modname <span class="ot">=</span> <span class="fu">import</span>(<span class="st">&#39;prefix/modname&#39;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>pkgname <span class="ot">=</span> <span class="fu">import_package</span>(<span class="st">&#39;pkgname&#39;</span>)</span></code></pre></div>
 <p>With ‘box’, modules and packages are imported via <a href="https://klmr.me/box/reference/use.html"><code>box::use</code></a>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>modname)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(pkgname)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>modname)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(pkgname)</span></code></pre></div>
 <p>Notably, module and package names in a use declaration in ‘box’ are
 unquoted, unevaluated expressions; and <strong>the ‘box’ package is
 never loaded via <code>library</code></strong>. In fact,
@@ -398,19 +408,19 @@ never loaded via <code>library</code></strong>. In fact,
 qualified. The equivalent of the ‘modules’ code
 <code>mod = import(&#39;modname&#39;)</code> no longer exists. To import a
 <em>local</em> module without namespace prefix, instead use</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>modname)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>modname)</span></code></pre></div>
 <p><code>box::use</code> has no return value. Instead, it automatically
 creates an alias with the module/package name in the calling scope
 <em>if no names are attached</em> (see below). To override the alias
 name, specify it as as a named argument:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(<span class="at">mod_alias =</span> prefix<span class="sc">/</span>modname)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(<span class="at">mod_alias =</span> prefix<span class="sc">/</span>modname)</span></code></pre></div>
 <p>Unlike with <code>modules::import</code>, <code>box::use</code>
 allows (and encourages) multiple use declarations at once:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    prefix<span class="sc">/</span>mod1,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">mod =</span> prefix<span class="sc">/</span>mod2,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    pkg</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>    prefix<span class="sc">/</span>mod1,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    <span class="at">mod =</span> prefix<span class="sc">/</span>mod2,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>    pkg</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 <div id="attaching-names" class="section level3">
 <h3>Attaching names</h3>
@@ -418,31 +428,31 @@ allows (and encourages) multiple use declarations at once:</p>
 <code>attach_operators</code> parameters controlled if and which names
 were attached. In ‘box’, attachment is controlled via attach list
 declarations:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ‘modules’:</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">import</span>(<span class="st">&#39;prefix/mod&#39;</span>, <span class="at">attach =</span> <span class="fu">c</span>(<span class="st">&#39;name1&#39;</span>, <span class="st">&#39;name2&#39;</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ‘box’:</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>mod[name1, name2])</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># ‘modules’:</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">import</span>(<span class="st">&#39;prefix/mod&#39;</span>, <span class="at">attach =</span> <span class="fu">c</span>(<span class="st">&#39;name1&#39;</span>, <span class="st">&#39;name2&#39;</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co"># ‘box’:</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>mod[name1, name2])</span></code></pre></div>
 <p>Wildcard attach lists are also supported:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ‘modules’:</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">import</span>(<span class="st">&#39;prefix/mod&#39;</span>, <span class="at">attach =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ‘box’:</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>mod[...])</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># ‘modules’:</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">import</span>(<span class="st">&#39;prefix/mod&#39;</span>, <span class="at">attach =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co"># ‘box’:</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>mod[...])</span></code></pre></div>
 <p>To introduce a module/package alias when attaching names, specify an
 alias name:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ‘modules’:</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">import</span>(<span class="st">&#39;prefix/mod&#39;</span>, <span class="at">attach =</span> <span class="fu">c</span>(<span class="st">&#39;name1&#39;</span>, <span class="st">&#39;name2&#39;</span>))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ‘box’:</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(<span class="at">mod =</span> prefix<span class="sc">/</span>mod[name1, name2])</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># ‘modules’:</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>mod <span class="ot">=</span> <span class="fu">import</span>(<span class="st">&#39;prefix/mod&#39;</span>, <span class="at">attach =</span> <span class="fu">c</span>(<span class="st">&#39;name1&#39;</span>, <span class="st">&#39;name2&#39;</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co"># ‘box’:</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(<span class="at">mod =</span> prefix<span class="sc">/</span>mod[name1, name2])</span></code></pre></div>
 <p>‘box’ also allows declaring aliases for attached names; this feature
 did not exist in ‘modules’:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Declare alias for one name, attach other name unchanged:</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>mod[<span class="at">name_alias =</span> name1, name2])</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Declare alias for two names, attach all other exported names unchanged:</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>mod[<span class="at">name_alias1 =</span> name1, <span class="at">name_alias2 =</span> name2, ...])</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Declare alias for one name, attach other name unchanged:</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>mod[<span class="at">name_alias =</span> name1, name2])</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co"># Declare alias for two names, attach all other exported names unchanged:</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(prefix<span class="sc">/</span>mod[<span class="at">name_alias1 =</span> name1, <span class="at">name_alias2 =</span> name2, ...])</span></code></pre></div>
 <p>The <code>attach_operators</code> option from ‘modules’ has been
 dropped. If users require operators, they need to explicitly attach them
 when using ‘box’.</p>
@@ -493,27 +503,27 @@ non-hidden names; that is, all names that didn’t start with a dot
 <p>‘box’ makes exporting explicit. By default, <em>no</em> names are
 exported from a module, unless they are marked with the directive
 comment <code>#&#39; @export</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This function is not exported:</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>f1 <span class="ot">=</span> <span class="cf">function</span> () {}</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This nested module is not exported</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>nested1)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># This function is exported:</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">=</span> <span class="cf">function</span> () {}</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># This nested module is exported</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>nested2)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># This function is not exported:</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>f1 <span class="ot">=</span> <span class="cf">function</span> () {}</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co"># This nested module is not exported</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>nested1)</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co"># This function is exported:</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>f2 <span class="ot">=</span> <span class="cf">function</span> () {}</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># This nested module is exported</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>nested2)</span></code></pre></div>
 <p><code>@export</code> directives that decorate <code>box::use</code>
 declarations apply to <em>all</em> names declared in it:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pkg_alias =</span> pkg,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    prefix<span class="sc">/</span>mod,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    prefix<span class="sc">/</span>mod2[a, b, c]</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    <span class="at">pkg_alias =</span> pkg,</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>    prefix<span class="sc">/</span>mod,</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    prefix<span class="sc">/</span>mod2[a, b, c]</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>)</span></code></pre></div>
 <p>The above code will export the names <code>pkg_alias</code>,
 <code>mod</code>, <code>a</code>, <code>b</code> and <code>c</code>.
 This replaces the function <code>export_submodule</code> from ‘modules’,
@@ -526,7 +536,7 @@ create a module which explicitly doesn’t export any names), module
 authors can add the following declaration to their module source code,
 which explicitly declares that the source file is to be treated as a
 module with no exports:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">export</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">export</span>()</span></code></pre></div>
 </div>
 <div id="accessing-default-packages" class="section level2">
 <h2>Accessing default packages</h2>
@@ -544,7 +554,7 @@ packages, it needs to declare them explicitly (e.g. via
 packages, they can import the module <code>r/core</code> for this
 purpose. The following declaration approximates the behaviour of
 ‘modules’:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(r<span class="sc">/</span>core[...])</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(r<span class="sc">/</span>core[...])</span></code></pre></div>
 </div>
 <div id="loading-parents-of-nested-modules" class="section level2">
 <h2>Loading parents of nested modules</h2>
@@ -587,19 +597,19 @@ definition of the functions <code>even</code> and <code>odd</code>,
 which determine whether a non-negative integer is even or odd:</p>
 <ul>
 <li><p><code>even.r</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>odd[...])</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>even <span class="ot">=</span> <span class="cf">function</span> (n) {</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    n <span class="sc">==</span> 0L <span class="sc">||</span> <span class="sc">!</span> <span class="fu">odd</span>(n)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div></li>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>odd[...])</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>even <span class="ot">=</span> <span class="cf">function</span> (n) {</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>    n <span class="sc">==</span> 0L <span class="sc">||</span> <span class="sc">!</span> <span class="fu">odd</span>(n)</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>}</span></code></pre></div></li>
 <li><p><code>odd.r</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>even[...])</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>odd <span class="ot">=</span> <span class="cf">function</span> (n) {</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    n <span class="sc">!=</span> 0L <span class="sc">&amp;&amp;</span> <span class="fu">even</span>(n <span class="sc">-</span> 1L)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div></li>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>even[...])</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>odd <span class="ot">=</span> <span class="cf">function</span> (n) {</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>    n <span class="sc">!=</span> 0L <span class="sc">&amp;&amp;</span> <span class="fu">even</span>(n <span class="sc">-</span> 1L)</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>}</span></code></pre></div></li>
 </ul>
 <p>These modules compute <code>even</code> in terms of <code>odd</code>,
 and vice-versa. Yet ‘box’ has no trouble importing and using both these
@@ -608,13 +618,13 @@ imported submodules themselves. That is, the following version of
 <code>odd.r</code> would cause an error:</p>
 <ul>
 <li><p><code>odd.r</code>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>even[...])</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>odd <span class="ot">=</span> <span class="cf">function</span> (n) {</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    n <span class="sc">!=</span> 0L <span class="sc">&amp;&amp;</span> <span class="fu">even</span>(n <span class="sc">-</span> 1L)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div></li>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>even[...])</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>odd <span class="ot">=</span> <span class="cf">function</span> (n) {</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>    n <span class="sc">!=</span> 0L <span class="sc">&amp;&amp;</span> <span class="fu">even</span>(n <span class="sc">-</span> 1L)</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>}</span></code></pre></div></li>
 </ul>
 </div>
 

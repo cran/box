@@ -4,13 +4,15 @@
 \alias{file}
 \title{Find the full file names of files in modules}
 \usage{
-\special{box::file(\dots, module = current_module())}
+\special{box::file(\dots)}
+
+\special{box::file(\dots, module)}
 }
 \arguments{
 \item{\dots}{character vectors of files or subdirectories inside a module; if
 none is given, return the root directory of the module}
 
-\item{module}{a module environment (default: current module)}
+\item{module}{a module environment}
 }
 \value{
 A character vector containing the absolute paths to the files

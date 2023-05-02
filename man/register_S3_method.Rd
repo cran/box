@@ -14,7 +14,7 @@
 \item{method}{the method to register.}
 }
 \value{
-\code{register_S3_method} is called for its side effect.
+\code{box::register_S3_method} is called for its side effect.
 }
 \description{
 \code{box::register_S3_method} makes an S3 method for a given generic and

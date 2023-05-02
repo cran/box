@@ -1,12 +1,12 @@
 ## ----eval = FALSE-------------------------------------------------------------
 #  #' @export
-#  f = function () "c$f"
+#  f = function () 'c$f'
 
 ## ----eval = FALSE-------------------------------------------------------------
 #  #' @export
-#  f = function () "b$f"
+#  f = function () 'b$f'
 #  
-#  g = function () "b$g"
+#  g = function () 'b$g'
 
 ## ----eval = FALSE-------------------------------------------------------------
 #  #' @export
@@ -18,7 +18,7 @@
 #  box::use(./c)
 #  
 #  #' @export
-#  f = function () "a$f"
+#  f = function () 'a$f'
 #  
 #  f_of_c1 = c$f
 #  f_of_c2 = get('f', parent.env(environment()))

@@ -110,7 +110,26 @@ name = function () {
     if (is_namespace(mod_ns)) namespace_info(mod_ns, 'info')$name
 }
 
-# FIXME: Export?
+#' Get a module’s namespace environment
+#'
+#' Called inside a module, \code{box::topenv()} returns the module namespace
+#' environment. Otherwise, it behaves similarly to \code{\link[base]{topenv}}.
+#' @usage \special{box::topenv()}
+#' @usage \special{box::topenv(env)}
+#' @param module a module environment
+#' @return \code{box::topenv()} returns the top-level module environment of the
+#' module it is called from, or the nearest top-level non-module environment
+#' otherwise; this is usually \code{.GlobalEnv}.
+#'
+#' \code{box::topenv(env)} returns the nearest top-level environment that is a
+#' direct or indirect parent of \code{env}.
+#' @export
+topenv = function (module) {
+    if (missing(module)) module = current_mod()
+    if (inherits(module, 'box$mod')) attr(module, 'namespace')
+    else mod_topenv(module)
+}
+
 current_mod = function (env = parent.frame(2L)) {
     mod_topenv(env)
 }
@@ -126,7 +145,7 @@ mod_topenv = function (env = parent.frame()) {
 #' environment.
 #' @name namespace
 is_mod_topenv = function (env) {
-    is_namespace(env) || identical(env, topenv(env)) || identical(env, emptyenv())
+    is_namespace(env) || identical(env, base::topenv(env)) || identical(env, emptyenv())
 }
 
 #' @keywords internal
@@ -195,23 +214,32 @@ find_import_env.environment = function (x, spec, info, mod_ns) {
 import_into_env = function (to_env, to_names, from_env, from_names) {
     for (i in seq_along(to_names)) {
         if (
-            exists(from_names[i], from_env, inherits = FALSE) &&
-            bindingIsActive(from_names[i], from_env) &&
-            ! inherits((fun = active_binding_function(from_names[i], from_env)), 'box$placeholder')
+            exists(from_names[i], from_env, inherits = FALSE)
+            && bindingIsActive(from_names[i], from_env)
+            && ! inherits((fun = activeBindingFunction(from_names[i], from_env)), 'box$placeholder')
         ) {
             makeActiveBinding(to_names[i], fun, to_env)
         } else {
-            assign(to_names[i], get(from_names[i], from_env), envir = to_env)
+            assign(to_names[i], env_get(from_env, from_names[i]), envir = to_env)
         }
     }
 }
 
-active_binding_function = if (as.integer(version$major) >= 4L) {
-    function (sym, env) activeBindingFunction(sym, env)
-} else {
-    function (sym, env) {
-        as.list(`class<-`(env, NULL), all.names = TRUE)[[sym]]
-    }
+env_get = function (env, name) {
+    UseMethod('env_get')
+}
+
+# Method for package namespace environments. This distinction is necessary since
+# lazydata in packages can’t be loaded via `get`.
+env_get.environment = function (env, name) {
+    getExportedValue(env, name)
+}
+
+`env_get.box$mod` =
+`env_get.box$ns` = function (env, name) {
+    # Explicitly allow inherited values, which is used to support re-exporting
+    # imports in modules.
+    get(name, envir = env)
 }
 
 #' Wrap \dQuote{unsafe calls} functions

@@ -27,8 +27,8 @@ help = function (topic, help_type = getOption('help_type', 'text')) {
 
     if (subject != '.__module__.') {
         obj = if (
-            exists(subject, target_mod, inherits = FALSE) &&
-            ! bindingIsActive(subject, target_mod)
+            exists(subject, target_mod, inherits = FALSE)
+            && ! bindingIsActive(subject, target_mod)
         ) get(subject, envir = target_mod, inherits = FALSE)
 
         if (inherits(obj, 'box$mod')) {
@@ -194,7 +194,7 @@ call_help = function (call, caller) {
     candidates = utils::getAnywhere('help')
     envs = map(environment, candidates$objs)
     valid = candidates$visible & map_lgl(is.function, candidates$objs)
-    other_helps = candidates$obj[valid & ! map_lgl(identical, envs, topenv())]
+    other_helps = candidates$objs[valid & ! map_lgl(identical, envs, base::topenv())]
 
     call[[1L]] = other_helps[[1L]]
     eval(call, envir = caller)

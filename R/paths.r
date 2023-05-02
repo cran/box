@@ -21,8 +21,9 @@
 #' @note
 #' \pkg{box} \emph{should} be able to figure out the script path automatically.
 #' Using \code{box::set_script_path} should therefore never be necessary.
-#' \href{https://github.com/klmr/box/issues/new}{Please file an issue} if you
-#' encounter a situation that necessitates using \code{box::set_script_path}!
+#' \href{https://github.com/klmr/box/issues/new?assignees=&labels=\%E2\%9A\%A0\%EF\%B8\%8F+bug&title=\%5Bset_script_path\%5D\%20&template=bug-report.yml}{Please
+#' file an issue} if you encounter a situation that necessitates using
+#' \code{box::set_script_path}!
 #'
 #' @examples
 #' box::set_script_path('scripts/my_script.r')
@@ -68,7 +69,7 @@ path = function (mod) {
 #' base directory, or the current working directory if not invoked on a module.
 #' @rdname path
 base_path = function (mod) {
-    normalizePath(module_path(mod), winslash = '/')
+    normalizePath(module_path(mod), winslash = '/', mustWork = FALSE)
 }
 
 script_path_env = new.env(parent = emptyenv())
@@ -160,12 +161,11 @@ knitr_path = function (...) {
 shiny_path = function (...) {
     if (! 'shiny' %in% loadedNamespaces()) return()
     in_shiny =
-        (utils::packageVersion('shiny') < '1.6.0' && shiny::isRunning()) ||
-        {
+        (utils::packageVersion('shiny') < '1.6.0' && shiny::isRunning()) || {
             # `isRunning` no longer works in Shiny 1.6.0:
             # <https://github.com/rstudio/shiny/issues/3499>
             shiny_ns = getNamespace('shiny')
-            any(map_lgl(identical, lapply(sys.frames(), topenv), shiny_ns))
+            any(map_lgl(identical, lapply(sys.frames(), base::topenv), shiny_ns))
         }
     if (in_shiny) getwd()
 }
@@ -175,22 +175,50 @@ shiny_path = function (...) {
 #' \pkg{testthat} test case.
 #' @rdname path
 testthat_path = function (...) {
-    if (identical(Sys.getenv("TESTTHAT"), "true")) getwd()
+    if (identical(Sys.getenv('TESTTHAT'), 'true')) getwd()
 }
 
 #' @return \code{rstdio_path} returns the directory in which the currently
 #' active RStudio script file is saved.
 #' @rdname path
 rstudio_path = function (...) {
-    # `RSTUDIO` environment variable is set in terminal run inside RStudio, so
-    # we need to exclude that case; conversely, `.Platform$GUI` is apparently
-    # not yet set to "RStudio" during startup, so just checking that is
-    # insufficient. See comments at <https://stackoverflow.com/a/35849779/1968>.
-    if (Sys.getenv("RSTUDIO") != "1") return(NULL)
-    if (! identical(.Platform$GUI, "RStudio")) return(NULL)
+    # .Platform$GUI is not yet set to "RStudio" during startup, so checking for
+    # it *might* be insufficient in corner cases.
+    # However, we cannot merely check whether the `RSTUDIO` environment
+    # variable is set, because it is also set inside the RStudio terminal; and
+    # when ‘box’ is invoked from a script that is run in the terminal, we do
+    # *not* want to use RStudio’s active document, since that isn’t the script
+    # from which we are called.
+    # See also comments at <https://stackoverflow.com/a/35849779/1968>.
+    if (! identical(.Platform$GUI, 'RStudio')) return(NULL)
 
-    document_path = rstudioapi::getActiveDocumentContext()$path
-    if (! identical(document_path, '')) dirname(document_path)
+    document_path = if (requireNamespace('rstudioapi', quietly = TRUE)) {
+        rstudioapi::getActiveDocumentContext()$path
+    } else {
+        # ‘rstudioapi’ might not be installed. Attempt to use the internal API
+        # as a fallback.
+        tryCatch(
+            as.environment('tools:rstudio')$.rs.api.getActiveDocumentContext()$path,
+            error = function (.) {
+                bug_reports_url = utils::packageDescription(.packageName)$BugReports
+                warning(fmt(
+                    'It looks like the code is run from inside RStudio but ',
+                    '{.packageName;\'} is unable to identify the calling ',
+                    'document. This should not happen. Please consider filing ',
+                    'a bug report at <{bug_reports_url}>.'
+                ))
+                ''
+            }
+        )
+    }
+
+    if (identical(document_path, '')) {
+        # The active document wasn’t saved yet, or the code is invoked from the
+        # R REPL/console.
+        getwd()
+    } else {
+        dirname(document_path)
+    }
 }
 
 #' @return \code{wd_path} returns the current working directory.
@@ -242,7 +270,7 @@ calling_mod_path = function (caller) {
 
 #' \code{split_path(path)} is a platform independent and filesystem logic
 #' aware alternative to \code{strsplit(path, '/')[[1L]]}.
-#' @param path the path to split
+#' @param path the path
 #' @return \code{split_path} returns a character vector of path components that
 #' logically represent \code{path}.
 #' @rdname paths
@@ -268,10 +296,13 @@ merge_path = function (components) {
     do.call('file.path', as.list(components))
 }
 
-#' \code{sanitize_path(path)} replaces invalid characters in the given
+#' \code{sanitize_path_fragment(path)} replaces invalid characters in the given
 #' \emph{relative} path, making the result a valid Windows path.
 #' @rdname paths
-sanitize_path = function (path) {
+sanitize_path_fragment = function (path) {
     win32_reserved_path_chars = '[<>:"/\\|?*]'
-    gsub(win32_reserved_path_chars, '_', path)
+    # Replace invalid chars with `-`, which is unlikely to appear in R names.
+    # This isn’t particularly important, but it decreases the risk of name
+    # clashes e.g. for path names of the interactive HTML help.
+    gsub(win32_reserved_path_chars, '-', path)
 }
