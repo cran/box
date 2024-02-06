@@ -28,7 +28,7 @@ box::use(./bio/seq)
 The function `box::use` accepts a list of *unquoted*, *qualified* module
 names. Each of these module names will load a single module and make it
 available to the caller in some form. In the code above, we’ve loaded a
-single module, `seq/seq`. `bio` serves as a *parent module* that may
+single module, `bio/seq`. `bio` serves as a *parent module* that may
 group several submodules. Since the module name inside `box::use` starts
 with `./`, the module location is resolved *locally*, i.e. relative to
 the path of the currently running code.
@@ -76,7 +76,7 @@ box::help(seq$revcomp)
 ```
 
 Now let’s actually *use* the module. The `seq` function inside the
-`dna/seq` module constructs a set of (optionally named) biological
+`bio/seq` module constructs a set of (optionally named) biological
 sequences:
 
 ```{r eval = FALSE}
@@ -123,10 +123,10 @@ getS3method('print', 'bio/seq')
     ##     )
     ##     invisible(x)
     ## }
-    ## <environment: 0x122f66140>
+    ## <environment: 0x112b83660>
 
-The source code for `print.bio/seq` contains an interesting `use`
-declaration. It show-cases an alternative way of invoking `box::use`,
+The source code for `` `print.bio/seq` `` contains an interesting `use`
+declaration: it showcases an alternative way of invoking `box::use`,
 which we’ll explore now.
 
 ## Attaching modules
@@ -164,15 +164,15 @@ specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-
 modules: `box::use(foo/bar)` works, `box::use(bar)` does not (instead,
 it is assumed that `bar` refers to a *package*)!
 
-In the declaration above we use `[revcomp]` to specify that the
-`revcomp` name from the `bio/seq` module should be attached in the
-calling environment. The `[…]` part is an *attach specification*: a
-comma-separated list of names inside the parentheses specifies which
-names to attach. The special symbol `...` specifies that *all exported
-names* should be attached. This has an effect similar to conventional
-package loading via `library` (or `attach`ing an environment): all the
-attached names are now available for direct use without necessitating
-the `seq$` qualifier:
+In the declaration above we use `[revcomp, is_valid]` to specify that
+the names `revcomp` `is_valid` from the `bio/seq` module should be
+attached in the calling environment. The `[…]` part is an *attach
+specification*: a comma-separated list of names inside the parentheses
+specifies which names to attach. The special symbol `...` can be used to
+specify that *all exported names* should be attached. This has an effect
+similar to conventional package loading via `library` (or `attach`ing an
+environment): all the attached names are now available for direct use
+without necessitating the `seq$` qualifier:
 
 ```{r eval = FALSE}
 is_valid(s)

@@ -11,12 +11,11 @@ mod_info(spec, source_path)
 pkg_info(spec)
 }
 \arguments{
+\item{spec}{a \code{mod_spec} or \code{pkg_spec} (for \code{mod_info} and
+\code{pkg_info}, respectively)}
+
 \item{source_path}{character string full path to the physical module
 location.}
-
-\item{mod_spec}{a \code{mod_spec}.}
-
-\item{pkg_spec}{a \code{pkg_spec}}
 }
 \value{
 \code{mod_info} and \code{pkg_info} return a structure representing

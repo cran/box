@@ -2,8 +2,8 @@
 % Please edit documentation in R/box-package.r
 \docType{package}
 \name{box}
-\alias{box}
 \alias{box-package}
+\alias{box}
 \title{An alternative module system for R}
 \description{
 Use \code{box::use(prefix/mod)} to import a module, or \code{box::use(pkg)}

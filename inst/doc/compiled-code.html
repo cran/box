@@ -12,7 +12,7 @@
 
 <meta name="author" content="Konrad Rudolph" />
 
-<meta name="date" content="2023-05-01" />
+<meta name="date" content="2024-02-07" />
 
 <title>Using compiled code</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Using compiled code</h1>
 <h4 class="author">Konrad Rudolph</h4>
-<h4 class="date">2023-05-01</h4>
+<h4 class="date">2024-02-07</h4>
 
 
 <div id="TOC">
@@ -411,7 +411,7 @@ intended for direct consumption of the module user.</p>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    old_dir <span class="ot">=</span> <span class="fu">setwd</span>(box<span class="sc">::</span><span class="fu">file</span>())</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="fu">on.exit</span>(<span class="fu">setwd</span>(old_dir))</span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    exitcode <span class="ot">=</span> <span class="fu">system2</span>(<span class="st">&#39;R&#39;</span>, <span class="fu">c</span>(<span class="st">&#39;CMD&#39;</span>, <span class="st">&#39;SHLIB&#39;</span>, <span class="fu">paste0</span>(object_names, <span class="st">&#39;.c&#39;</span>)))</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="fu">stopifnot</span>(exitcode <span class="sc">==</span> 0L)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="fu">stopifnot</span>(exitcode <span class="sc">==</span> <span class="dv">0</span><span class="dt">L</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>}</span>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="fu">build_shared_lib</span>(<span class="st">&#39;hello&#39;</span>)</span></code></pre></div>

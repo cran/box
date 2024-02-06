@@ -11,7 +11,7 @@
 
 \item{class}{the class name.}
 
-\item{method}{the method to register.}
+\item{method}{the method to register (optional).}
 }
 \value{
 \code{box::register_S3_method} is called for its side effect.
@@ -21,17 +21,20 @@
 class known inside a module.
 }
 \details{
-Methods for generics defined in the same module do not need to be
-registered explicitly, and indeed \emph{should not} be registered. However,
-if the user wants to add a method for a known generic (defined outside the
-module, e.g. \code{\link{print}}), then this needs to be made known
-explicitly.
+If \code{method} is missing, it defaults to a function named
+\code{name.class} in the calling module. If no such function exists, an error
+is raised.
+
+Methods for generics defined in the same module do not need to be registered
+explicitly, and indeed \emph{should not} be registered. However, if the user
+wants to add a method for a known generic (defined outside the module, e.g.
+\code{\link{print}}), then this needs to be made known explicitly.
 
 See the vignette at \code{vignette('box', 'box')} for more information about
 defining S3 methods inside modules.
 }
 \note{
 \strong{Do not} call \code{\link[base]{registerS3method}} inside a
-module. Only use \code{box::register_S3_method}. This is important for the
+module, only use \code{box::register_S3_method}. This is important for the
 module’s own book-keeping.
 }

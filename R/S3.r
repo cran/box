@@ -6,24 +6,34 @@
 #' @usage \special{box::register_S3_method(name, class, method)}
 #' @param name the name of the generic as a character string.
 #' @param class the class name.
-#' @param method the method to register.
+#' @param method the method to register (optional).
 #' @return \code{box::register_S3_method} is called for its side effect.
 #'
-#' @details Methods for generics defined in the same module do not need to be
-#' registered explicitly, and indeed \emph{should not} be registered. However,
-#' if the user wants to add a method for a known generic (defined outside the
-#' module, e.g. \code{\link{print}}), then this needs to be made known
-#' explicitly.
+#' @details If \code{method} is missing, it defaults to a function named
+#' \code{name.class} in the calling module. If no such function exists, an error
+#' is raised.
+#'
+#' Methods for generics defined in the same module do not need to be registered
+#' explicitly, and indeed \emph{should not} be registered. However, if the user
+#' wants to add a method for a known generic (defined outside the module, e.g.
+#' \code{\link{print}}), then this needs to be made known explicitly.
 #'
 #' See the vignette at \code{vignette('box', 'box')} for more information about
 #' defining S3 methods inside modules.
 #'
 #' @note \strong{Do not} call \code{\link[base]{registerS3method}} inside a
-#' module. Only use \code{box::register_S3_method}. This is important for the
+#' module, only use \code{box::register_S3_method}. This is important for the
 #' module’s own book-keeping.
 #' @export
 register_S3_method = function (name, class, method) {
-    module = environment(method)
+    if (missing(method)) {
+        module = current_mod()
+        method = rethrow_on_error(
+            get(paste0(name, '.', class), envir = module, mode = 'function', inherits = FALSE)
+        )
+    } else {
+        module = environment(method)
+    }
     attr(module, 'S3') = c(attr(module, 'S3'), paste(name, class, sep = '.'))
     registerS3method(name, class, method, module)
 }
@@ -61,12 +71,12 @@ is_S3 = function (expr) {
             # functions since that would require evaluating the function body in
             # the general case (namely, the function body itself could redefine
             # them).
-            if (identical(fun, quote(UseMethod))) return(TRUE)
+            if (fun %==% quote(UseMethod)) return(TRUE)
 
             # Make sure nested function definitions are *not* getting
             # traversed: `UseMethod` inside a nested function does not make
             # the containing function a generic.
-            if (identical(fun, quote(`function`))) return(FALSE)
+            if (fun %==% quote(`function`)) return(FALSE)
 
             # Without `as.list`, missing arguments in call expressions cause
             # missing values in our code. Rather than handle these as special

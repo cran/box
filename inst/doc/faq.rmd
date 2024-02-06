@@ -29,15 +29,16 @@ be silenced by setting `options(box.warn.legacy = FALSE)`. After
 changing this option, ‘box’ needs to be (unloaded and) reloaded for the
 change to take effect.
 
-### Can I use “meta” packages like ‘tidyverse’ with ‘box’?
+### Can I use “meta packages” like ‘tidyverse’ with ‘box’?
 
 No. You can use *individual* packages from the tidyverse via `box::use`.
-But directly loading a “meta” package such as ‘tidverse’ is
+But directly loading a “meta package” such as ‘tidverse’ is
 intentionally not supported.
 
-“Meta” packages such as ‘tidyverse’ are antithetical to the purpose of
-‘box’: the whole point of ‘box’ is to make package imports *explicit*.
-Using “meta” packages would undermine this and is therefore discouraged.
+“Meta packages” such as ‘tidyverse’ are antithetical to the purpose of
+‘box’: the whole point of ‘box’ is to make package imports *explicit*,
+and to limit the number of names that are attached in the current scope.
+Using “meta packages” would undermine this and is therefore discouraged.
 
 ### How to organise globally installed modules?
 
@@ -81,9 +82,9 @@ packages need to be attached, including all core R packages that are
 otherwise attached by default. This includes ‘stats’, ‘graphics’,
 ‘grDevices’, ‘utils’, ‘datasets’ and ‘methods’.
 
-To use names from any of these packages, the packages needs to be loaded
-via `box::use` same as third-party packages. Alternatively, the standard
-module `r/core` can be used (and, optionally, attached):
+To use names from any of these packages, the packages need to be loaded
+via `box::use`, same as third-party packages. Alternatively, the
+standard module `r/core` can be used (and, optionally, attached):
 
 ```{r eval = FALSE}
 box::use(r/core[...])
@@ -93,8 +94,7 @@ This is equivalent to using and attaching the default R packages
 ‘methods’, ‘stats’, ‘graphics’, ‘grDevices’ and ‘utils’, and is
 therefore similar to the state of a regular R session.
 
-This module ships with ‘box’ and is always findable, regardless of the
-value of the module search path.
+This module ships with ‘box’ and is always findable.
 
 ### “there is no package called ‘X’” when running `box::use(X)`, even though the module ‘X’ exists
 

@@ -38,9 +38,6 @@ wd_path(...)
 }
 \arguments{
 \item{mod}{a module environment or namespace}
-
-\item{args}{command line arguments passed to R; by default, the arguments of
-the current process.}
 }
 \value{
 \code{path} returns a character string containing the module’s full

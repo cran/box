@@ -12,7 +12,7 @@
 
 <meta name="author" content="Konrad Rudolph" />
 
-<meta name="date" content="2023-05-01" />
+<meta name="date" content="2024-02-07" />
 
 <title>Migration guide</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Migration guide</h1>
 <h4 class="author">Konrad Rudolph</h4>
-<h4 class="date">2023-05-01</h4>
+<h4 class="date">2024-02-07</h4>
 
 
 <div id="TOC">
@@ -601,14 +601,14 @@ which determine whether a non-negative integer is even or odd:</p>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>even <span class="ot">=</span> <span class="cf">function</span> (n) {</span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>    n <span class="sc">==</span> 0L <span class="sc">||</span> <span class="sc">!</span> <span class="fu">odd</span>(n)</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>    n <span class="sc">==</span> <span class="dv">0</span><span class="dt">L</span> <span class="sc">||</span> <span class="sc">!</span> <span class="fu">odd</span>(n)</span>
 <span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>}</span></code></pre></div></li>
 <li><p><code>odd.r</code>:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(.<span class="sc">/</span>even[...])</span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>odd <span class="ot">=</span> <span class="cf">function</span> (n) {</span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>    n <span class="sc">!=</span> 0L <span class="sc">&amp;&amp;</span> <span class="fu">even</span>(n <span class="sc">-</span> 1L)</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>    n <span class="sc">!=</span> <span class="dv">0</span><span class="dt">L</span> <span class="sc">&amp;&amp;</span> <span class="fu">even</span>(n <span class="sc">-</span> <span class="dv">1</span><span class="dt">L</span>)</span>
 <span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>}</span></code></pre></div></li>
 </ul>
 <p>These modules compute <code>even</code> in terms of <code>odd</code>,
@@ -623,7 +623,7 @@ imported submodules themselves. That is, the following version of
 <span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a></span>
 <span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="co">#&#39; @export</span></span>
 <span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>odd <span class="ot">=</span> <span class="cf">function</span> (n) {</span>
-<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>    n <span class="sc">!=</span> 0L <span class="sc">&amp;&amp;</span> <span class="fu">even</span>(n <span class="sc">-</span> 1L)</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>    n <span class="sc">!=</span> <span class="dv">0</span><span class="dt">L</span> <span class="sc">&amp;&amp;</span> <span class="fu">even</span>(n <span class="sc">-</span> <span class="dv">1</span><span class="dt">L</span>)</span>
 <span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>}</span></code></pre></div></li>
 </ul>
 </div>

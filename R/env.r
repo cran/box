@@ -8,17 +8,22 @@
 #' The namespace contains a module’s content. This schema is very much like R
 #' package organisation. A good resource for this is:
 #' <http://obeautifulcode.com/R/How-R-Searches-And-Finds-Stuff/>
+#' @note Module namespaces aren’t actual R package namespaces. This is
+#' intentional, since R makes strong assumptions about package namespaces that
+#' are violated here. In particular, such namespaces would have to be registered
+#' in R’s internal namespace registry, and their (de)serialisation is handled by
+#' R code which assumes that they belong to actual packges that can be loaded
+#' via `loadNamespace`.
 #' @name namespace
 #' @keywords internal
 make_namespace = function (info) {
     # Packages use `baseenv()` instead of `emptyenv()` for the parent
     # environment of `.__NAMESPACE__.`. I don’t know why: there should never be
     # any need for inherited name lookup. We’re only using an environment for
-    # `.__module__.` to get efficient name lookup and a mutable value store.
+    # `.__module__.` to get a mutable value store.
     ns_attr = new.env(parent = emptyenv())
     ns_attr$info = info
     ns_env = new.env(parent = make_imports_env(info))
-    # FIXME: Why not use `.__NAMESPACE__.` here?
     ns_env$.__module__. = ns_attr
     # TODO: Set exports here!
     enable_s3_lookup(ns_env, info)
@@ -145,7 +150,7 @@ mod_topenv = function (env = parent.frame()) {
 #' environment.
 #' @name namespace
 is_mod_topenv = function (env) {
-    is_namespace(env) || identical(env, base::topenv(env)) || identical(env, emptyenv())
+    is_namespace(env) || env %==% base::topenv(env) || env %==% emptyenv()
 }
 
 #' @keywords internal
@@ -201,7 +206,7 @@ find_import_env = function (x, spec, info, mod_ns) {
 }
 
 find_import_env.environment = function (x, spec, info, mod_ns) {
-    env = if (identical(x, .GlobalEnv)) {
+    env = if (x %==% .GlobalEnv) {
         # We need to use `attach` here: attempting to set
         # `parent.env(.GlobalEnv)` causes R to segfault.
         box_attach(NULL, name = paste0('mod:', spec_name(spec)))

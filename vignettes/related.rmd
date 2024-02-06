@@ -47,12 +47,6 @@ missing package please let me know.
   based on R6 classes which should facilitates inter-modules
   communication.
 
-- ‘**[supreme](https://strboul.github.io/supreme/)**’: A modeling tool
-  helping users better structure ‘Shiny’ applications developed with
-  ‘Shiny’ modules. Users are able to: 1. Visualize relationship of
-  modules in existing applications 2. Design new applications from
-  scratch.
-
 ## Tools for loading code
 
 The packages listed above also provide means for loading code; however,
@@ -61,12 +55,13 @@ also gained capabilities for authoring modular code, but since their
 initial and primary purpose was *loading* code, they’re instead listed
 below.
 
-- ‘**[import](https://import.rticulate.org/)**’: Alternative mechanism
-  for importing objects from packages and R modules. The syntax allows
-  for importing multiple objects with a single command in an expressive
-  way. The import package bridges some of the gap between using library
-  (or require) and direct (single-object) imports. Furthermore the
-  imported objects are not placed in the current environment.
+- ‘**[import](https://cran.r-project.org/package=import)**’: Alternative
+  mechanism for importing objects from packages and R modules. The
+  syntax allows for importing multiple objects with a single command in
+  an expressive way. The import package bridges some of the gap between
+  using library (or require) and direct (single-object) imports.
+  Furthermore the imported objects are not placed in the current
+  environment.
 
 - ‘**[conflicted](https://conflicted.r-lib.org/)**’: R’s default
   conflict management system gives the most recently loaded package
@@ -102,7 +97,7 @@ below.
   safe and reproducible solutions development in R. It will help you
   with environment separation per project, dependency management, local
   packages creation and preparing deployment packs for your solutions.
-  (Archived as of 2023-05-01)
+  (Archived as of 2024-02-07)
 
 - ‘**[mvbutils](https://cran.r-project.org/package=mvbutils)**’:
   Hierarchical workspace tree, code editing and backup, easy package

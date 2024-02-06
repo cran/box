@@ -1,4 +1,4 @@
-#' Find the full file names of files in modules
+#' Find the full paths of files in modules
 #'
 #' @usage \special{box::file(\dots)}
 #' @usage \special{box::file(\dots, module)}
@@ -18,6 +18,7 @@
 #' @seealso \code{\link[base]{system.file}}
 #' @export
 file = function (..., module) {
+    check_dots_unnamed()
     if (missing(module)) module = current_mod()
     file.path(base_path(module), ...)
 }

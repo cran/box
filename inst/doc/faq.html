@@ -12,7 +12,7 @@
 
 <meta name="author" content="Konrad Rudolph" />
 
-<meta name="date" content="2023-05-01" />
+<meta name="date" content="2024-02-07" />
 
 <title>Frequently asked questions</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Frequently asked questions</h1>
 <h4 class="author">Konrad Rudolph</h4>
-<h4 class="date">2023-05-01</h4>
+<h4 class="date">2024-02-07</h4>
 
 
 <div id="TOC">
@@ -350,8 +350,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <li><a href="#can-i-call-libraryrequiresource-inside-a-module" id="toc-can-i-call-libraryrequiresource-inside-a-module">Can I call
 <code>library</code>/<code>require</code>/<code>source</code> inside a
 module?</a></li>
-<li><a href="#can-i-use-meta-packages-like-tidyverse-with-box" id="toc-can-i-use-meta-packages-like-tidyverse-with-box">Can I use
-“meta” packages like ‘tidyverse’ with ‘box’?</a></li>
+<li><a href="#can-i-use-meta-packages-like-tidyverse-with-box" id="toc-can-i-use-meta-packages-like-tidyverse-with-box">Can I use “meta
+packages” like ‘tidyverse’ with ‘box’?</a></li>
 <li><a href="#how-to-organise-globally-installed-modules" id="toc-how-to-organise-globally-installed-modules">How to organise
 globally installed modules?</a></li>
 </ul></li>
@@ -387,13 +387,14 @@ option, ‘box’ needs to be (unloaded and) reloaded for the change to take
 effect.</p>
 </div>
 <div id="can-i-use-meta-packages-like-tidyverse-with-box" class="section level3">
-<h3>Can I use “meta” packages like ‘tidyverse’ with ‘box’?</h3>
+<h3>Can I use “meta packages” like ‘tidyverse’ with ‘box’?</h3>
 <p>No. You can use <em>individual</em> packages from the tidyverse via
-<code>box::use</code>. But directly loading a “meta” package such as
+<code>box::use</code>. But directly loading a “meta package” such as
 ‘tidverse’ is intentionally not supported.</p>
-<p>“Meta” packages such as ‘tidyverse’ are antithetical to the purpose
+<p>“Meta packages” such as ‘tidyverse’ are antithetical to the purpose
 of ‘box’: the whole point of ‘box’ is to make package imports
-<em>explicit</em>. Using “meta” packages would undermine this and is
+<em>explicit</em>, and to limit the number of names that are attached in
+the current scope. Using “meta packages” would undermine this and is
 therefore discouraged.</p>
 </div>
 <div id="how-to-organise-globally-installed-modules" class="section level3">
@@ -432,16 +433,15 @@ module search path:</p>
 other packages need to be attached, including all core R packages that
 are otherwise attached by default. This includes ‘stats’, ‘graphics’,
 ‘grDevices’, ‘utils’, ‘datasets’ and ‘methods’.</p>
-<p>To use names from any of these packages, the packages needs to be
-loaded via <code>box::use</code> same as third-party packages.
+<p>To use names from any of these packages, the packages need to be
+loaded via <code>box::use</code>, same as third-party packages.
 Alternatively, the standard module <code>r/core</code> can be used (and,
 optionally, attached):</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">use</span>(r<span class="sc">/</span>core[...])</span></code></pre></div>
 <p>This is equivalent to using and attaching the default R packages
 ‘methods’, ‘stats’, ‘graphics’, ‘grDevices’ and ‘utils’, and is
 therefore similar to the state of a regular R session.</p>
-<p>This module ships with ‘box’ and is always findable, regardless of
-the value of the module search path.</p>
+<p>This module ships with ‘box’ and is always findable.</p>
 </div>
 <div id="there-is-no-package-called-x-when-running-boxusex-even-though-the-module-x-exists" class="section level3">
 <h3>“there is no package called ‘X’” when running

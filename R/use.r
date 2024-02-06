@@ -79,6 +79,11 @@
 #' argument matching, in contrast with the behavior of the \code{$} operator in
 #' base \R, which matches partial names.
 #'
+#' \strong{Note} that replacement functions (i.e. functions of the form
+#' \code{fun<-}) must be \emph{attached} to be usable, because \R syntactically
+#' does not allow assignment calls where the left-hand side of the assignment
+#' contains \code{$}.
+#'
 #' @section Export specification:
 #'
 #' Names defined in modules can be marked as \emph{exported} by prefixing them
@@ -126,6 +131,11 @@
 #' \env{R_BOX_PATH}. If set, it may consist of one or more search paths,
 #' separated by the platform’s path separator (i.e. \code{;} on Windows, and
 #' \code{:} on most other platforms).
+#'
+#' \strong{Deprecation warning:} in the next major version, \pkg{box} will read
+#' environment variables only \emph{once}, at package load time. Modifying the
+#' value of \env{R_BOX_PATH} afterwards will have no effect, unless the package
+#' is unloaded and reloaded.
 #'
 #' The \emph{current directory} is context-dependent: inside a module, the
 #' directory corresponds to the module’s directory. Inside an \R code file
@@ -291,7 +301,7 @@ use = function (...) {
 #' @name importing
 use_one = function (declaration, alias, caller, use_call) {
     # Permit empty expression resulting from trailing comma.
-    if (identical(declaration, quote(expr =)) && identical(alias, '')) return()
+    if (declaration %==% quote(expr =) && alias %==% '') return()
 
     rethrow_on_error({
         spec = parse_spec(declaration, alias)
@@ -513,7 +523,7 @@ assign_temp_alias = function (spec, caller) {
         if (missing(mod_exports)) {
             # Find from where I’m called, and infer the target of the export.
             mod_exports_frame_index = utils::tail(which(map_lgl(
-                function (call) identical(call[[1L]], quote(mod_exports)),
+                function (call) call[[1L]] %==% quote(mod_exports),
                 sys.calls()
             )), 1L)
             frame = sys.frame(mod_exports_frame_index)

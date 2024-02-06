@@ -96,8 +96,8 @@ module_path = function (mod) {
     for (test in path_tests) {
         path = test(mod)
         if (! is.null(path)) {
-            # Don’t cache result, since it might change suddenly, due to knitr
-            # or Shiny running in the same process.
+            # Don’t cache result, since it might change suddenly, e.g. due to
+            # knitr or Shiny running in the same process.
             return(path)
         }
     }
@@ -118,8 +118,6 @@ explicit_path = function (...) {
     script_path_env$value
 }
 
-#' @param args command line arguments passed to R; by default, the arguments of
-#' the current process.
 #' @return \code{r_path} returns the directory in which the current script is
 #' run via \command{Rscript}, \command{R CMD BATCH} or \command{R -f}.
 #' @rdname path
@@ -175,7 +173,7 @@ shiny_path = function (...) {
 #' \pkg{testthat} test case.
 #' @rdname path
 testthat_path = function (...) {
-    if (identical(Sys.getenv('TESTTHAT'), 'true')) getwd()
+    if (Sys.getenv('TESTTHAT') %==% 'true') getwd()
 }
 
 #' @return \code{rstdio_path} returns the directory in which the currently
@@ -190,7 +188,7 @@ rstudio_path = function (...) {
     # *not* want to use RStudio’s active document, since that isn’t the script
     # from which we are called.
     # See also comments at <https://stackoverflow.com/a/35849779/1968>.
-    if (! identical(.Platform$GUI, 'RStudio')) return(NULL)
+    if (.Platform$GUI %!=% 'RStudio') return(NULL)
 
     document_path = if (requireNamespace('rstudioapi', quietly = TRUE)) {
         rstudioapi::getActiveDocumentContext()$path
@@ -212,7 +210,7 @@ rstudio_path = function (...) {
         )
     }
 
-    if (identical(document_path, '')) {
+    if (document_path %==% '') {
         # The active document wasn’t saved yet, or the code is invoked from the
         # R REPL/console.
         getwd()
@@ -275,7 +273,7 @@ calling_mod_path = function (caller) {
 #' logically represent \code{path}.
 #' @rdname paths
 split_path = function (path) {
-    if (identical(path, dirname(path))) {
+    if (path %==% dirname(path)) {
         path
     } else {
         c(Recall(dirname(path)), basename(path))

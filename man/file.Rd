@@ -2,7 +2,7 @@
 % Please edit documentation in R/file.r
 \name{file}
 \alias{file}
-\title{Find the full file names of files in modules}
+\title{Find the full paths of files in modules}
 \usage{
 \special{box::file(\dots)}
 
@@ -19,7 +19,7 @@ A character vector containing the absolute paths to the files
  specified in \code{\dots}.
 }
 \description{
-Find the full file names of files in modules
+Find the full paths of files in modules
 }
 \note{
 If called from outside a module, the current working directory is used.

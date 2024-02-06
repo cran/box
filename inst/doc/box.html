@@ -12,7 +12,7 @@
 
 <meta name="author" content="Konrad Rudolph" />
 
-<meta name="date" content="2023-05-01" />
+<meta name="date" content="2024-02-07" />
 
 <title>Get started</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Get started</h1>
 <h4 class="author">Konrad Rudolph</h4>
-<h4 class="date">2023-05-01</h4>
+<h4 class="date">2024-02-07</h4>
 
 
 <div id="TOC">
@@ -373,7 +373,7 @@ and <code>T</code>).</p>
 <em>unquoted</em>, <em>qualified</em> module names. Each of these module
 names will load a single module and make it available to the caller in
 some form. In the code above, we’ve loaded a single module,
-<code>seq/seq</code>. <code>bio</code> serves as a <em>parent
+<code>bio/seq</code>. <code>bio</code> serves as a <em>parent
 module</em> that may group several submodules. Since the module name
 inside <code>box::use</code> starts with <code>./</code>, the module
 location is resolved <em>locally</em>, i.e. relative to the path of the
@@ -402,7 +402,7 @@ list of exported names. We can also display the interactive help for
 individual names using the <code>box::help</code> function, e.g.:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>box<span class="sc">::</span><span class="fu">help</span>(seq<span class="sc">$</span>revcomp)</span></code></pre></div>
 <p>Now let’s actually <em>use</em> the module. The <code>seq</code>
-function inside the <code>dna/seq</code> module constructs a set of
+function inside the <code>bio/seq</code> module constructs a set of
 (optionally named) biological sequences:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>s <span class="ot">=</span> seq<span class="sc">$</span><span class="fu">seq</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>    <span class="at">gene1 =</span> <span class="st">&#39;GATTACAGATCAGCTCAGCACCTAGCACTATCAGCAAC&#39;</span>,</span>
@@ -436,9 +436,9 @@ classes):</p>
 ##     )
 ##     invisible(x)
 ## }
-## &lt;environment: 0x122f66140&gt;</code></pre>
-<p>The source code for <code>print.bio/seq</code> contains an
-interesting <code>use</code> declaration. It show-cases an alternative
+## &lt;environment: 0x112b83660&gt;</code></pre>
+<p>The source code for <code>`print.bio/seq`</code> contains an
+interesting <code>use</code> declaration: it showcases an alternative
 way of invoking <code>box::use</code>, which we’ll explore now.</p>
 </div>
 <div id="attaching-modules" class="section level2">
@@ -466,12 +466,13 @@ on Linux.</p>
 fully qualified, nested modules: <code>box::use(foo/bar)</code> works,
 <code>box::use(bar)</code> does not (instead, it is assumed that
 <code>bar</code> refers to a <em>package</em>)!</p>
-<p>In the declaration above we use <code>[revcomp]</code> to specify
-that the <code>revcomp</code> name from the <code>bio/seq</code> module
-should be attached in the calling environment. The <code>[…]</code> part
-is an <em>attach specification</em>: a comma-separated list of names
-inside the parentheses specifies which names to attach. The special
-symbol <code>...</code> specifies that <em>all exported names</em>
+<p>In the declaration above we use <code>[revcomp, is_valid]</code> to
+specify that the names <code>revcomp</code> <code>is_valid</code> from
+the <code>bio/seq</code> module should be attached in the calling
+environment. The <code>[…]</code> part is an <em>attach
+specification</em>: a comma-separated list of names inside the
+parentheses specifies which names to attach. The special symbol
+<code>...</code> can be used to specify that <em>all exported names</em>
 should be attached. This has an effect similar to conventional package
 loading via <code>library</code> (or <code>attach</code>ing an
 environment): all the attached names are now available for direct use
