@@ -25,7 +25,7 @@
 
 \item{alias}{an alias name}
 
-\item{attach_list}{a list of names to attached, optionally witha aliases of
+\item{attach_list}{a list of names to attached, optionally with aliases of
 the form \code{alias = name}; or the special placeholder name \code{\dots}}
 }
 \value{
@@ -117,7 +117,7 @@ Alternatively, exports may be specified via the
 
 A module which has not declared any exports is treated as a \emph{legacy
 module} and exports \emph{all} default-visible names (that is, all names that
-do not start with a dot (\code{.}). This usage is present only for backwards
+do not start with a dot (\code{.})). This usage is present only for backwards
 compatibility with plain \R scripts, and its usage is \emph{not recommended}
 when writing new modules.
 
@@ -201,6 +201,8 @@ All module source code files are assumed to be UTF-8 encoded.
 \examples{
 # Set the module search path for the example module.
 old_opts = options(box.path = system.file(package = 'box'))
+old_env = Sys.getenv('R_BOX_PATH', NA)
+Sys.unsetenv('R_BOX_PATH')
 
 # Basic usage
 # The file `mod/hello_world.r` exports the functions `hello` and `bye`.
@@ -224,7 +226,10 @@ hi('Eve')
 bye('Eve')
 
 # Reset the module search path
-on.exit(options(old_opts))
+on.exit({
+  options(old_opts)
+  if (! is.na(old_env)) Sys.setenv(R_BOX_PATH = old_env)
+})
 
 \dontrun{
 # The following code illustrates different import declaration syntaxes

@@ -66,8 +66,14 @@ surrounding \code{use} call}
 \code{use_one} does not currently return a value. — This might change
 in the future.
 
-\code{load_mod} returns the module or package namespace environment
-of the specified module or package info.
+\code{load_mod} returns a named \code{list(mod_ns, is_apex)}
+containing the module or package namespace environment of the specified
+module or package info, as well as a flag specifying whether the loaded
+module is an “apex” module, i.e. not loaded from within another module. This
+information is then used to lock all environments that were created during
+the loading. — This must happen after nested modules are fully loaded, since
+deferred finalization otherwise cannot modify these environments during
+cyclic imports.
 
 \code{mod_exports} returns an export environment containing the
 exported names of a given module.

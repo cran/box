@@ -12,7 +12,7 @@
 
 <meta name="author" content="Konrad Rudolph" />
 
-<meta name="date" content="2024-02-07" />
+<meta name="date" content="2025-11-25" />
 
 <title>Frequently asked questions</title>
 
@@ -50,8 +50,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -340,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Frequently asked questions</h1>
 <h4 class="author">Konrad Rudolph</h4>
-<h4 class="date">2024-02-07</h4>
+<h4 class="date">2025-11-25</h4>
 
 
 <div id="TOC">
@@ -390,7 +391,7 @@ effect.</p>
 <h3>Can I use “meta packages” like ‘tidyverse’ with ‘box’?</h3>
 <p>No. You can use <em>individual</em> packages from the tidyverse via
 <code>box::use</code>. But directly loading a “meta package” such as
-‘tidverse’ is intentionally not supported.</p>
+‘tidyverse’ is intentionally not supported.</p>
 <p>“Meta packages” such as ‘tidyverse’ are antithetical to the purpose
 of ‘box’: the whole point of ‘box’ is to make package imports
 <em>explicit</em>, and to limit the number of names that are attached in
@@ -456,7 +457,7 @@ separator (<code>/</code>).</p>
 path (set via the environment variable <code>R_BOX_PATH</code> or via
 <code>getOption(&#39;box.path&#39;)</code>), modules need to be located in
 nested folders.</p>
-<p>See <a href="#how-to-organise-globally-installed-modules-">how to
+<p>See <a href="#how-to-organise-globally-installed-modules">how to
 organise globally installed modules?</a> for details.</p>
 </div>
 </div>

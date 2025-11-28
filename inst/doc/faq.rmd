@@ -32,7 +32,7 @@ change to take effect.
 ### Can I use “meta packages” like ‘tidyverse’ with ‘box’?
 
 No. You can use *individual* packages from the tidyverse via `box::use`.
-But directly loading a “meta package” such as ‘tidverse’ is
+But directly loading a “meta package” such as ‘tidyverse’ is
 intentionally not supported.
 
 “Meta packages” such as ‘tidyverse’ are antithetical to the purpose of
@@ -109,4 +109,4 @@ path (set via the environment variable `R_BOX_PATH` or via
 `getOption('box.path')`), modules need to be located in nested folders.
 
 See [how to organise globally installed
-modules?](#how-to-organise-globally-installed-modules-) for details.
+modules?](#how-to-organise-globally-installed-modules) for details.

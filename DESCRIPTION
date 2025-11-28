@@ -1,6 +1,6 @@
 Package: box
 Title: Write Reusable, Composable and Modular R Code
-Version: 1.2.0
+Version: 1.2.1
 Authors@R: c(
         person(
             'Konrad', 'Rudolph',
@@ -28,11 +28,12 @@ Suggests: devtools, knitr (>= 1.40), rmarkdown, R6, rlang, roxygen2 (>=
         7.2.1), shiny, stringr, testthat (>= 3.1.7)
 Enhances: rstudioapi
 VignetteBuilder: knitr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.3
 NeedsCompilation: yes
-Packaged: 2024-02-06 23:06:27 UTC; rudolpk2
-Author: Konrad Rudolph [aut, cre] (<https://orcid.org/0000-0002-9866-7051>),
-  Michael Schubert [ctb] (<https://orcid.org/0000-0002-6862-5221>)
+Packaged: 2025-11-25 13:42:07 UTC; rudolpk2
+Author: Konrad Rudolph [aut, cre] (ORCID:
+    <https://orcid.org/0000-0002-9866-7051>),
+  Michael Schubert [ctb] (ORCID: <https://orcid.org/0000-0002-6862-5221>)
 Maintainer: Konrad Rudolph <konrad.rudolph@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-02-06 23:50:02 UTC
+Date/Publication: 2025-11-28 14:10:08 UTC

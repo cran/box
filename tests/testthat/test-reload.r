@@ -4,11 +4,6 @@ is_module_loaded = function (path) {
     path %in% names(box:::loaded_mods)
 }
 
-unload_all = function () {
-    modenv = box:::loaded_mods
-    rm(list = names(modenv), envir = modenv)
-}
-
 tempfile_dir = function (...) {
     file = tempfile()
     dir.create(file)
@@ -30,7 +25,7 @@ edit_nested_test_module = function (dir) {
 test_that('module can be reloaded', {
     # Required since other tests have side-effects.
     # Tear-down would be helpful here, but not supported by testthat.
-    unload_all()
+    box::purge_cache()
 
     box::use(mod/a)
     expect_equal(length(box:::loaded_mods), 1L)
@@ -60,6 +55,12 @@ test_that('reload includes module dependencies', {
 
     old_path = options(box.path = dir)
     on.exit(options(old_path), add = TRUE)
+
+    old_env = Sys.getenv('R_BOX_PATH', NA)
+    if (!is.na(old_env)) {
+        Sys.unsetenv('R_BOX_PATH')
+        on.exit(Sys.setenv(R_BOX_PATH = old_env), add = TRUE)
+    }
 
     create_nested_test_module(dir)
 
@@ -114,4 +115,10 @@ test_that('`reload` shows expected errors', {
         box::reload(x),
         '"reload" expects a module object, got "x", which is of type "integer" instead'
     )
+})
+
+test_that('reloading a module used twice does not cause a warning', {
+    box::use(mod/reload/nested/c)
+
+    expect_warning(box::reload(c), NA)
 })

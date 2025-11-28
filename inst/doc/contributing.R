@@ -1,6 +1,6 @@
 ## ----eval = FALSE-------------------------------------------------------------
-#  install.packages('box', repos = 'https://klmr.r-universe.dev')
+# install.packages('box', repos = 'https://klmr.r-universe.dev')
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  pak::pak('klmr/box@build')
+# pak::pak('klmr/box@build')
 

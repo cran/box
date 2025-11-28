@@ -1,99 +1,99 @@
 ## ----eval = FALSE-------------------------------------------------------------
-#  box::use(./bio/seq)
+# box::use(./bio/seq)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  ls()
+# ls()
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  seq
+# seq
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  ls(seq)
+# ls(seq)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  box::help(seq$revcomp)
+# box::help(seq$revcomp)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  s = seq$seq(
-#      gene1 = 'GATTACAGATCAGCTCAGCACCTAGCACTATCAGCAAC',
-#      gene2 = 'CATAGCAACTGACATCACAGCG'
-#  )
-#  
-#  seq$is_valid(s)
+# s = seq$seq(
+#     gene1 = 'GATTACAGATCAGCTCAGCACCTAGCACTATCAGCAAC',
+#     gene2 = 'CATAGCAACTGACATCACAGCG'
+# )
+# 
+# seq$is_valid(s)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  s
+# s
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  getS3method('print', 'bio/seq')
+# getS3method('print', 'bio/seq')
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  box::unload(seq)
+# box::unload(seq)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  options(box.path = getwd())
-#  box::use(bio/seq[revcomp, is_valid])
+# options(box.path = getwd())
+# box::use(bio/seq[revcomp, is_valid])
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  is_valid(s)
+# is_valid(s)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  revcomp(s)
+# revcomp(s)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  search()
+# search()
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  detach()
-#  
-#  seq_table = function (s) {
-#      box::use(./bio/seq[...])
-#      table(s)
-#  }
-#  
-#  seq_table(s)
+# detach()
+# 
+# seq_table = function (s) {
+#     box::use(./bio/seq[...])
+#     table(s)
+# }
+# 
+# seq_table(s)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  search()
+# search()
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  table(s)
+# table(s)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  #' @export
-#  box::use(./seq)
+# #' @export
+# box::use(./seq)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  options(box.path = NULL) # Reset search path
-#  box::use(./bio)
-#  ls(bio)
+# options(box.path = NULL) # Reset search path
+# box::use(./bio)
+# ls(bio)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  ls(bio$seq)
+# ls(bio$seq)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  bio$seq$revcomp('CAT')
+# bio$seq$revcomp('CAT')
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  #' @export
-#  box::use(./seq[...])
+# #' @export
+# box::use(./seq[...])
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  .on_load = function (ns) {
-#      message(
-#          'Loading module "', box::name(), '"\n',
-#          'Module path: "', basename(box::file()), '"'
-#      )
-#  }
-#  
-#  box::export() # Mark as a ‘box’ module.
+# .on_load = function (ns) {
+#     message(
+#         'Loading module "', box::name(), '"\n',
+#         'Module path: "', basename(box::file()), '"'
+#     )
+# }
+# 
+# box::export() # Mark as a ‘box’ module.
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  box::use(./info)
+# box::use(./info)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  box::use(./info)
+# box::use(./info)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  box::reload(info)
+# box::reload(info)
 
