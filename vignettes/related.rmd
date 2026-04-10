@@ -97,7 +97,7 @@ below.
   safe and reproducible solutions development in R. It will help you
   with environment separation per project, dependency management, local
   packages creation and preparing deployment packs for your solutions.
-  (Archived as of 2025-11-25)
+  (Archived as of 2026-04-08)
 
 - ‘**[mvbutils](https://cran.r-project.org/package=mvbutils)**’:
   Hierarchical workspace tree, code editing and backup, easy package

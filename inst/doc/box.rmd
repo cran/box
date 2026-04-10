@@ -123,7 +123,7 @@ getS3method('print', 'bio/seq')
     ##     )
     ##     invisible(x)
     ## }
-    ## <environment: 0x115dffe08>
+    ## <environment: 0x13cd393d8>
 
 The source code for `` `print.bio/seq` `` contains an interesting `use`
 declaration: it showcases an alternative way of invoking `box::use`,

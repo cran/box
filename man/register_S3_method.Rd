@@ -9,9 +9,9 @@
 \arguments{
 \item{name}{the name of the generic as a character string.}
 
-\item{class}{the class name.}
+\item{class}{the class name as a character string.}
 
-\item{method}{the method to register (optional).}
+\item{method}{the function to register as a method (optional).}
 }
 \value{
 \code{box::register_S3_method} is called for its side effect.
