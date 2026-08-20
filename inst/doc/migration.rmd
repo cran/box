@@ -23,8 +23,8 @@ will no longer work with ‘box’.
 The following guide is intended to ease migration to ‘box’. **Migration
 is strongly recommended**, since the authors believe that ‘modules’ had
 conceptual shortcomings that have been fixed in ‘box’, and to keep the
-ecosystem consolidated. For the time being, ‘modules’ will receive
-support (only) in the form of critical bug fixes.
+ecosystem consolidated. Furthermore, *‘modules’ is no longer supported,
+and will no longer receive bug fixes*.
 
 ## Importing modules and packages
 

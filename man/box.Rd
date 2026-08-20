@@ -59,6 +59,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Konrad Rudolph \email{konrad.rudolph@gmail.com} (\href{https://orcid.org/0000-0002-9866-7051}{ORCID})
 
+Authors:
+\itemize{
+  \item Konrad Rudolph \email{konrad.rudolph@gmail.com} (\href{https://orcid.org/0000-0002-9866-7051}{ORCID})
+}
+
 Other contributors:
 \itemize{
   \item Michael Schubert \email{mschu.dev@gmail.com} (\href{https://orcid.org/0000-0002-6862-5221}{ORCID}) [contributor]
